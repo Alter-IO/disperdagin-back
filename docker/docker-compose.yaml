@@ -1,0 +1,31 @@
+services:
+  postgres:
+    container_name: alter-io-postgres
+    image: postgres:16-alpine3.20
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: alter-io
+      POSTGRES_USER: dev_mode
+      POSTGRES_PASSWORD: Mypassword123!
+    ports:
+      - 5432:5432
+
+  api:
+    container_name: alter-io-api
+    build:
+      context: ..
+      dockerfile: docker/dev.dockerfile
+    working_dir: /backend-alter-io
+    ports:
+      - 4000:4000
+    volumes:
+      - ../server:/backend-alter-io
+    environment:
+      APP_ENV: DEVELOPMENT
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local
