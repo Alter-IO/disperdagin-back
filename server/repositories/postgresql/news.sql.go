@@ -24,7 +24,7 @@ AND
 
 type DeleteNewsParams struct {
 	DeletedAt pgtype.Timestamptz `json:"deleted_at"`
-	ID        string             `json:"id"`
+	ID        pgtype.Text        `json:"id"`
 }
 
 func (q *Queries) DeleteNews(ctx context.Context, arg DeleteNewsParams) (int64, error) {
@@ -106,8 +106,8 @@ type FindNewsByIdRow struct {
 	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }
 
-func (q *Queries) FindNewsById(ctx context.Context, id string) (FindNewsByIdRow, error) {
-	row := q.db.QueryRow(ctx, findNewsById, id)
+func (q *Queries) FindNewsById(ctx context.Context, dollar_1 pgtype.Text) (FindNewsByIdRow, error) {
+	row := q.db.QueryRow(ctx, findNewsById, dollar_1)
 	var i FindNewsByIdRow
 	err := row.Scan(
 		&i.ID,
@@ -126,20 +126,20 @@ VALUES ($1, $2, $3, $4, $5)
 `
 
 type InsertNewsParams struct {
-	ID        string             `json:"id"`
-	Title     string             `json:"title"`
-	Content   string             `json:"content"`
-	Author    string             `json:"author"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	Column1 pgtype.Text        `json:"column_1"`
+	Column2 pgtype.Text        `json:"column_2"`
+	Column3 pgtype.Text        `json:"column_3"`
+	Column4 pgtype.Text        `json:"column_4"`
+	Column5 pgtype.Timestamptz `json:"column_5"`
 }
 
 func (q *Queries) InsertNews(ctx context.Context, arg InsertNewsParams) error {
 	_, err := q.db.Exec(ctx, insertNews,
-		arg.ID,
-		arg.Title,
-		arg.Content,
-		arg.Author,
-		arg.CreatedAt,
+		arg.Column1,
+		arg.Column2,
+		arg.Column3,
+		arg.Column4,
+		arg.Column5,
 	)
 	return err
 }
@@ -158,10 +158,10 @@ AND
 `
 
 type UpdateNewsParams struct {
-	Title     string             `json:"title"`
-	Content   string             `json:"content"`
+	Title     pgtype.Text        `json:"title"`
+	Content   pgtype.Text        `json:"content"`
 	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
-	ID        string             `json:"id"`
+	ID        pgtype.Text        `json:"id"`
 }
 
 func (q *Queries) UpdateNews(ctx context.Context, arg UpdateNewsParams) (int64, error) {

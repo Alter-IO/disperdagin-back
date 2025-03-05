@@ -24,7 +24,7 @@ AND
 
 type DeleteUserParams struct {
 	DeletedAt pgtype.Timestamptz `json:"deleted_at"`
-	ID        string             `json:"id"`
+	ID        pgtype.Text        `json:"id"`
 }
 
 func (q *Queries) DeleteUser(ctx context.Context, arg DeleteUserParams) (int64, error) {
@@ -56,8 +56,8 @@ type FindUserByIDRow struct {
 	Password string `json:"password"`
 }
 
-func (q *Queries) FindUserByID(ctx context.Context, id string) (FindUserByIDRow, error) {
-	row := q.db.QueryRow(ctx, findUserByID, id)
+func (q *Queries) FindUserByID(ctx context.Context, dollar_1 pgtype.Text) (FindUserByIDRow, error) {
+	row := q.db.QueryRow(ctx, findUserByID, dollar_1)
 	var i FindUserByIDRow
 	err := row.Scan(
 		&i.ID,
@@ -113,20 +113,20 @@ VALUES ($1, $2, $3, $4, $5)
 `
 
 type InsertUserParams struct {
-	ID        string             `json:"id"`
-	RoleID    string             `json:"role_id"`
-	Username  string             `json:"username"`
-	Password  string             `json:"password"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	Column1 pgtype.Text        `json:"column_1"`
+	Column2 pgtype.Text        `json:"column_2"`
+	Column3 pgtype.Text        `json:"column_3"`
+	Column4 pgtype.Text        `json:"column_4"`
+	Column5 pgtype.Timestamptz `json:"column_5"`
 }
 
 func (q *Queries) InsertUser(ctx context.Context, arg InsertUserParams) error {
 	_, err := q.db.Exec(ctx, insertUser,
-		arg.ID,
-		arg.RoleID,
-		arg.Username,
-		arg.Password,
-		arg.CreatedAt,
+		arg.Column1,
+		arg.Column2,
+		arg.Column3,
+		arg.Column4,
+		arg.Column5,
 	)
 	return err
 }
@@ -144,9 +144,9 @@ AND
 `
 
 type UpdatePasswordParams struct {
-	Password  string             `json:"password"`
+	Password  pgtype.Text        `json:"password"`
 	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
-	ID        string             `json:"id"`
+	ID        pgtype.Text        `json:"id"`
 }
 
 func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) (int64, error) {

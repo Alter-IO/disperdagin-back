@@ -1,3 +1,5 @@
+-- ========== INDEPENDENT BASE TABLES ==========
+
 -- Create roles table if it doesn't exist
 DO $$
 BEGIN
@@ -12,6 +14,72 @@ BEGIN
     END IF;
 END
 $$;
+
+-- Create subdistricts table if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'subdistricts') THEN
+        CREATE TABLE "subdistricts" (
+          "id" VARCHAR PRIMARY KEY,
+          "name" VARCHAR NOT NULL,
+          "created_at" TIMESTAMPTZ NOT NULL,
+          "updated_at" TIMESTAMPTZ,
+          "author" VARCHAR NOT NULL,
+          "deleted_at" TIMESTAMPTZ
+        );
+    END IF;
+END
+$$;
+
+-- Create commodity_types table if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'commodity_types') THEN
+        CREATE TABLE "commodity_types" (
+          "id" VARCHAR PRIMARY KEY,
+          "description" TEXT NOT NULL,
+          "created_at" TIMESTAMPTZ NOT NULL,
+          "updated_at" TIMESTAMPTZ,
+          "author" VARCHAR NOT NULL,
+          "deleted_at" TIMESTAMPTZ
+        );
+    END IF;
+END
+$$;
+
+-- Create photo_categories table if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'photo_categories') THEN
+        CREATE TABLE "photo_categories" (
+          "id" VARCHAR PRIMARY KEY,
+          "category" VARCHAR NOT NULL,
+          "created_at" TIMESTAMPTZ NOT NULL,
+          "updated_at" TIMESTAMPTZ,
+          "author" VARCHAR NOT NULL,
+          "deleted_at" TIMESTAMPTZ
+        );
+    END IF;
+END
+$$;
+
+-- Create markets table if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'markets') THEN
+        CREATE TABLE "markets" (
+          "id" VARCHAR PRIMARY KEY,
+          "name" VARCHAR NOT NULL,
+          "created_at" TIMESTAMPTZ NOT NULL,
+          "updated_at" TIMESTAMPTZ,
+          "author" VARCHAR NOT NULL,
+          "deleted_at" TIMESTAMPTZ
+        );
+    END IF;
+END
+$$;
+
+-- ========== DEPENDENT TABLES (LEVEL 1) ==========
 
 -- Create users table if it doesn't exist
 DO $$
@@ -30,6 +98,73 @@ BEGIN
     END IF;
 END
 $$;
+
+-- Create villages table if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'villages') THEN
+        CREATE TABLE "villages" (
+          "id" VARCHAR PRIMARY KEY,
+          "subdistrict_id" VARCHAR NOT NULL,
+          "name" VARCHAR NOT NULL,
+          "created_at" TIMESTAMPTZ NOT NULL,
+          "updated_at" TIMESTAMPTZ,
+          "author" VARCHAR NOT NULL,
+          "deleted_at" TIMESTAMPTZ,
+          CONSTRAINT fk_subdistrict FOREIGN KEY ("subdistrict_id") REFERENCES "subdistricts" ("id")
+        );
+    END IF;
+END
+$$;
+
+-- Create commodities table if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'commodities') THEN
+        CREATE TABLE "commodities" (
+          "id" VARCHAR PRIMARY KEY,
+          "name" VARCHAR NOT NULL,
+          "price" DECIMAL(15,2) NOT NULL,
+          "unit" VARCHAR NOT NULL,
+          "publish_date" DATE NOT NULL,
+          "description" TEXT,
+          "commodity_type_id" VARCHAR NOT NULL,
+          "created_at" TIMESTAMPTZ NOT NULL,
+          "updated_at" TIMESTAMPTZ,
+          "author" VARCHAR NOT NULL,
+          "deleted_at" TIMESTAMPTZ,
+          CONSTRAINT fk_commodity_type FOREIGN KEY ("commodity_type_id") REFERENCES "commodity_types" ("id")
+        );
+    END IF;
+END
+$$;
+
+-- Create market_fees table if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'market_fees') THEN
+        CREATE TABLE "market_fees" (
+          "id" VARCHAR PRIMARY KEY,
+          "market_id" VARCHAR NOT NULL,
+          "num_permanent_kiosks" INTEGER NOT NULL,
+          "num_non_permanent_kiosks" INTEGER NOT NULL,
+          "permanent_kiosk_revenue" DECIMAL(15,2) NOT NULL,
+          "non_permanent_kiosk_revenue" DECIMAL(15,2) NOT NULL,
+          "collection_status" VARCHAR NOT NULL,
+          "description" TEXT,
+          "semester" VARCHAR NOT NULL,
+          "year" INTEGER NOT NULL,
+          "created_at" TIMESTAMPTZ NOT NULL,
+          "updated_at" TIMESTAMPTZ,
+          "author" VARCHAR NOT NULL,
+          "deleted_at" TIMESTAMPTZ,
+          CONSTRAINT fk_market FOREIGN KEY ("market_id") REFERENCES "markets" ("id")
+        );
+    END IF;
+END
+$$;
+
+-- ========== TABLES WITHOUT DEPENDENCIES ==========
 
 -- Create news table if it doesn't exist
 DO $$
@@ -121,7 +256,7 @@ BEGIN
 END
 $$;
 
--- Create public_information table if it doesn't exist
+-- Create legal_documents table if it doesn't exist
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'legal_documents') THEN
@@ -191,110 +326,6 @@ BEGIN
 END
 $$;
 
--- Create commodity_types table if it doesn't exist
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'commodity_types') THEN
-        CREATE TABLE "commodity_types" (
-          "id" VARCHAR PRIMARY KEY,
-          "description" TEXT NOT NULL,
-          "created_at" TIMESTAMPTZ NOT NULL,
-          "updated_at" TIMESTAMPTZ,
-          "author" VARCHAR NOT NULL,
-          "deleted_at" TIMESTAMPTZ
-        );
-    END IF;
-END
-$$;
-
--- Create photo_categories table if it doesn't exist
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'photo_categories') THEN
-        CREATE TABLE "photo_categories" (
-          "id" VARCHAR PRIMARY KEY,
-          "category" VARCHAR NOT NULL,
-          "created_at" TIMESTAMPTZ NOT NULL,
-          "updated_at" TIMESTAMPTZ,
-          "author" VARCHAR NOT NULL,
-          "deleted_at" TIMESTAMPTZ
-        );
-    END IF;
-END
-$$;
-
--- Create subdistricts table if it doesn't exist
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'subdistricts') THEN
-        CREATE TABLE "subdistricts" (
-          "id" VARCHAR PRIMARY KEY,
-          "name" VARCHAR NOT NULL,
-          "created_at" TIMESTAMPTZ NOT NULL,
-          "updated_at" TIMESTAMPTZ,
-          "author" VARCHAR NOT NULL,
-          "deleted_at" TIMESTAMPTZ
-        );
-    END IF;
-END
-$$;
-
--- Create villages table if it doesn't exist
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'villages') THEN
-        CREATE TABLE "villages" (
-          "id" VARCHAR PRIMARY KEY,
-          "subdistrict_id" VARCHAR NOT NULL,
-          "name" VARCHAR NOT NULL,
-          "created_at" TIMESTAMPTZ NOT NULL,
-          "updated_at" TIMESTAMPTZ,
-          "author" VARCHAR NOT NULL,
-          "deleted_at" TIMESTAMPTZ,
-          CONSTRAINT fk_subdistrict FOREIGN KEY ("subdistrict_id") REFERENCES "subdistricts" ("id")
-        );
-    END IF;
-END
-$$;
-
--- Create commodities table if it doesn't exist
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'commodities') THEN
-        CREATE TABLE "commodities" (
-          "id" VARCHAR PRIMARY KEY,
-          "name" VARCHAR NOT NULL,
-          "price" DECIMAL(15,2) NOT NULL,
-          "unit" VARCHAR NOT NULL,
-          "publish_date" DATE NOT NULL,
-          "description" TEXT,
-          "commodity_type_id" VARCHAR NOT NULL,
-          "created_at" TIMESTAMPTZ NOT NULL,
-          "updated_at" TIMESTAMPTZ,
-          "author" VARCHAR NOT NULL,
-          "deleted_at" TIMESTAMPTZ,
-          CONSTRAINT fk_commodity_type FOREIGN KEY ("commodity_type_id") REFERENCES "commodity_types" ("id")
-        );
-    END IF;
-END
-$$;
-
--- Create markets table if it doesn't exist
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'markets') THEN
-        CREATE TABLE "markets" (
-          "id" VARCHAR PRIMARY KEY,
-          "name" VARCHAR NOT NULL,
-          "created_at" TIMESTAMPTZ NOT NULL,
-          "updated_at" TIMESTAMPTZ,
-          "author" VARCHAR NOT NULL,
-          "deleted_at" TIMESTAMPTZ
-        );
-    END IF;
-END
-$$;
-
 -- Create employees table if it doesn't exist
 DO $$
 BEGIN
@@ -313,31 +344,6 @@ BEGIN
           "updated_at" TIMESTAMPTZ,
           "author" VARCHAR NOT NULL,
           "deleted_at" TIMESTAMPTZ
-        );
-    END IF;
-END
-$$;
-
--- Create market_fees table if it doesn't exist
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'market_fees') THEN
-        CREATE TABLE "market_fees" (
-          "id" VARCHAR PRIMARY KEY,
-          "market_id" VARCHAR NOT NULL,
-          "num_permanent_kiosks" INTEGER NOT NULL,
-          "num_non_permanent_kiosks" INTEGER NOT NULL,
-          "permanent_kiosk_revenue" DECIMAL(15,2) NOT NULL,
-          "non_permanent_kiosk_revenue" DECIMAL(15,2) NOT NULL,
-          "collection_status" VARCHAR NOT NULL,
-          "description" TEXT,
-          "semester" VARCHAR NOT NULL,
-          "year" INTEGER NOT NULL,
-          "created_at" TIMESTAMPTZ NOT NULL,
-          "updated_at" TIMESTAMPTZ,
-          "author" VARCHAR NOT NULL,
-          "deleted_at" TIMESTAMPTZ,
-          CONSTRAINT fk_market FOREIGN KEY ("market_id") REFERENCES "markets" ("id")
         );
     END IF;
 END

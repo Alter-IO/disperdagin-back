@@ -3,7 +3,7 @@ SELECT
     id,
     name,
     description,
-    owner,
+    author,
     created_at,
     updated_at
 FROM
@@ -17,7 +17,7 @@ AND
 SELECT
     id,
     name,
-    owner,
+    author,
     created_at
 FROM
     sectors
@@ -27,7 +27,7 @@ ORDER BY
     name ASC;
 
 -- name: InsertSector :exec
-INSERT INTO sectors(id, name, description, owner, created_at)
+INSERT INTO sectors(id, name, description, author, created_at)
 VALUES ($1, $2, $3, $4, $5);
 
 -- name: UpdateSector :execrows
@@ -36,7 +36,7 @@ UPDATE
 SET
     name = sqlc.arg(name),
     description = sqlc.arg(description),
-    owner = sqlc.arg(owner),
+    author = sqlc.arg(author),
     updated_at = sqlc.arg(updated_at)
 WHERE
     id = sqlc.arg(id)

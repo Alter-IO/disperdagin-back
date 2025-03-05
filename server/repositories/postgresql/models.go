@@ -3,35 +3,3 @@
 //   sqlc v1.28.0
 
 package postgresql
-
-import (
-	"github.com/jackc/pgx/v5/pgtype"
-)
-
-type News struct {
-	ID        string             `json:"id"`
-	Title     string             `json:"title"`
-	Content   string             `json:"content"`
-	Author    string             `json:"author"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
-	DeletedAt pgtype.Timestamptz `json:"deleted_at"`
-}
-
-type Role struct {
-	ID        string             `json:"id"`
-	Name      string             `json:"name"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
-	DeletedAt pgtype.Timestamptz `json:"deleted_at"`
-}
-
-type User struct {
-	ID        string             `json:"id"`
-	RoleID    string             `json:"role_id"`
-	Username  string             `json:"username"`
-	Password  string             `json:"password"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
-	DeletedAt pgtype.Timestamptz `json:"deleted_at"`
-}
