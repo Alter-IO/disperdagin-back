@@ -23,7 +23,7 @@ func (s *Service) GetUsers(ctx context.Context) ([]postgresql.FindUsersRow, erro
 }
 
 func (s *Service) GetUserByID(ctx context.Context, id string) (postgresql.FindUserByIDRow, error) {
-	user, err := s.repo.FindUserByID(ctx, id)
+	user, err := s.repo.FindUserByID(ctx, pgtype.Text{String: id, Valid: true})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return user, derrors.NewErrorf(derrors.ErrorCodeNotFound, "uraian jenis keigatan tidak ditemukan")
@@ -35,11 +35,11 @@ func (s *Service) GetUserByID(ctx context.Context, id string) (postgresql.FindUs
 }
 
 func validateCreateUser(data postgresql.InsertUserParams) error {
-	if data.Username == "" {
+	if data.Username.String == "" {
 		return errors.New("username wajib di isi")
 	}
 
-	if data.Password == "" {
+	if data.Password.String == "" {
 		return errors.New("password wajib di isi")
 	}
 
@@ -52,7 +52,7 @@ func (s *Service) CreateUser(ctx context.Context, data postgresql.InsertUserPara
 	}
 
 	params := postgresql.InsertUserParams{
-		ID:        helpers.GenerateID(),
+		ID:        pgtype.Text{String: helpers.GenerateID(), Valid: true},
 		RoleID:    data.RoleID,
 		Username:  data.Username,
 		Password:  data.Password,
@@ -71,7 +71,7 @@ func (s *Service) CreateUser(ctx context.Context, data postgresql.InsertUserPara
 
 func (s *Service) DeleteUser(ctx context.Context, id string) error {
 	params := postgresql.DeleteUserParams{
-		ID:        id,
+		ID:        pgtype.Text{String: id, Valid: true},
 		DeletedAt: pgtype.Timestamptz{Time: time.Now(), Valid: true},
 	}
 	rowAffected, err := s.repo.DeleteUser(ctx, params)

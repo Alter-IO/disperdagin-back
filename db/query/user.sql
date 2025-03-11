@@ -7,7 +7,7 @@ SELECT
 FROM
     users
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -25,7 +25,7 @@ ORDER BY
 
 -- name: InsertUser :exec
 INSERT INTO users(id, role_id, username, password, created_at)
-VALUES ($1, $2, $3, $4, $5);
+VALUES (sqlc.arg(id), sqlc.arg(role_id), sqlc.arg(username), sqlc.arg(password), sqlc.arg(created_at));
 
 -- name: UpdatePassword :execrows
 UPDATE

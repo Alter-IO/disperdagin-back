@@ -1,18 +1,18 @@
 services:
   postgres:
-    container_name: alter-io-postgres
+    container_name: disperdagin-postgres
     image: postgres:16-alpine3.20
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: alter-io
-      POSTGRES_USER: dev_mode
+      POSTGRES_DB: db_disperdagin
+      POSTGRES_USER: devs
       POSTGRES_PASSWORD: Mypassword123!
     ports:
       - 5432:5432
 
   api:
-    container_name: alter-io-api
+    container_name: disperdagin-api
     build:
       context: ..
       dockerfile: docker/dev.dockerfile

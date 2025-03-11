@@ -56,8 +56,8 @@ type FindUserByIDRow struct {
 	Password string `json:"password"`
 }
 
-func (q *Queries) FindUserByID(ctx context.Context, dollar_1 pgtype.Text) (FindUserByIDRow, error) {
-	row := q.db.QueryRow(ctx, findUserByID, dollar_1)
+func (q *Queries) FindUserByID(ctx context.Context, id pgtype.Text) (FindUserByIDRow, error) {
+	row := q.db.QueryRow(ctx, findUserByID, id)
 	var i FindUserByIDRow
 	err := row.Scan(
 		&i.ID,
@@ -113,20 +113,20 @@ VALUES ($1, $2, $3, $4, $5)
 `
 
 type InsertUserParams struct {
-	Column1 pgtype.Text        `json:"column_1"`
-	Column2 pgtype.Text        `json:"column_2"`
-	Column3 pgtype.Text        `json:"column_3"`
-	Column4 pgtype.Text        `json:"column_4"`
-	Column5 pgtype.Timestamptz `json:"column_5"`
+	ID        pgtype.Text        `json:"id"`
+	RoleID    pgtype.Text        `json:"role_id"`
+	Username  pgtype.Text        `json:"username"`
+	Password  pgtype.Text        `json:"password"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
 }
 
 func (q *Queries) InsertUser(ctx context.Context, arg InsertUserParams) error {
 	_, err := q.db.Exec(ctx, insertUser,
-		arg.Column1,
-		arg.Column2,
-		arg.Column3,
-		arg.Column4,
-		arg.Column5,
+		arg.ID,
+		arg.RoleID,
+		arg.Username,
+		arg.Password,
+		arg.CreatedAt,
 	)
 	return err
 }
