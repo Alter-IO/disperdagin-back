@@ -23,4 +23,4 @@ sqlc:
 	sqlc generate
 
 logs-api:
-	docker logs alter-io-api -f -n 100
+	docker logs disperdagin-api -f -n 100
