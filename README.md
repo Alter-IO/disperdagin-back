@@ -98,3 +98,7 @@ go run server/cmd/http/main.go
 ├── README.md            # Project documentation
 └── sqlc.yaml            # SQLC configuration file
 ```
+
+## Docs API
+
+[Postman DOCS API](https://documenter.getpostman.com/view/17655708/2sAYkBsLkw)
