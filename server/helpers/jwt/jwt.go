@@ -11,21 +11,19 @@ import (
 var jwtKey = []byte(cfg.GetConfig().JWT.Secret)
 
 type CustomClaims struct {
-	UserID     string `json:"user_id"`
-	RoleID     string `json:"role_id"`
-	DivisionID string `json:"division_id"`
+	UserID string `json:"user_id"`
+	RoleID string `json:"role_id"`
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(id, roleID, divisionID string) (tokenString string, err error) {
+func GenerateJWT(id, roleID string) (tokenString string, err error) {
 	claims := &CustomClaims{
-		UserID:     id,
-		RoleID:     roleID,
-		DivisionID: divisionID,
+		UserID: id,
+		RoleID: roleID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    cfg.GetConfig().JWT.Issuer,
 			Subject:   cfg.GetConfig().JWT.Subject,
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(12 * time.Hour)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(30 * time.Minute)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
 		},
@@ -52,9 +50,8 @@ func ValidateToken(signedToken string) (CustomClaims, error) {
 
 	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
 		return CustomClaims{
-			UserID:     claims.UserID,
-			RoleID:     claims.RoleID,
-			DivisionID: claims.DivisionID,
+			UserID: claims.UserID,
+			RoleID: claims.RoleID,
 		}, nil
 	}
 

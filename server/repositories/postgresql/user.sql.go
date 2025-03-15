@@ -39,8 +39,7 @@ const findUserByID = `-- name: FindUserByID :one
 SELECT
     id,
     role_id,
-    username,
-    password
+    username
 FROM
     users
 WHERE
@@ -53,12 +52,39 @@ type FindUserByIDRow struct {
 	ID       string `json:"id"`
 	RoleID   string `json:"role_id"`
 	Username string `json:"username"`
-	Password string `json:"password"`
 }
 
 func (q *Queries) FindUserByID(ctx context.Context, id pgtype.Text) (FindUserByIDRow, error) {
 	row := q.db.QueryRow(ctx, findUserByID, id)
 	var i FindUserByIDRow
+	err := row.Scan(&i.ID, &i.RoleID, &i.Username)
+	return i, err
+}
+
+const findUserByUsername = `-- name: FindUserByUsername :one
+SELECT
+    id,
+    role_id,
+    username,
+    password
+FROM
+    users
+WHERE
+    username = $1
+AND
+    deleted_at IS NULL
+`
+
+type FindUserByUsernameRow struct {
+	ID       string `json:"id"`
+	RoleID   string `json:"role_id"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+func (q *Queries) FindUserByUsername(ctx context.Context, username pgtype.Text) (FindUserByUsernameRow, error) {
+	row := q.db.QueryRow(ctx, findUserByUsername, username)
+	var i FindUserByUsernameRow
 	err := row.Scan(
 		&i.ID,
 		&i.RoleID,

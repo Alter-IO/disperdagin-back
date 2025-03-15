@@ -2,12 +2,24 @@
 SELECT
     id,
     role_id,
+    username
+FROM
+    users
+WHERE
+    id = sqlc.arg(id)
+AND
+    deleted_at IS NULL;
+
+-- name: FindUserByUsername :one
+SELECT
+    id,
+    role_id,
     username,
     password
 FROM
     users
 WHERE
-    id = sqlc.arg(id)
+    username = sqlc.arg(username)
 AND
     deleted_at IS NULL;
 
