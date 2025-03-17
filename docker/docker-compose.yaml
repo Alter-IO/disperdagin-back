@@ -27,5 +27,5 @@ services:
       - postgres
 
 volumes:
-  postgres_data:
+  postgres_data_disperdagin:
     driver: local
