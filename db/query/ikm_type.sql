@@ -11,7 +11,7 @@ SELECT
 FROM
     ikm_types
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -41,7 +41,7 @@ SELECT
 FROM
     ikm_types
 WHERE
-    public_info_type = $1
+    public_info_type = sqlc.arg(public_info_type)
 AND
     deleted_at IS NULL
 ORDER BY
@@ -49,7 +49,15 @@ ORDER BY
 
 -- name: InsertIKMType :exec
 INSERT INTO ikm_types(id, document_name, file_name, public_info_type, description, author, created_at)
-VALUES ($1, $2, $3, $4, $5, $6, $7);
+VALUES (
+    sqlc.arg(id),
+    sqlc.arg(document_name),
+    sqlc.arg(file_name),
+    sqlc.arg(public_info_type),
+    sqlc.arg(description),
+    sqlc.arg(author),
+    sqlc.arg(created_at)
+);
 
 -- name: UpdateIKMType :execrows
 UPDATE

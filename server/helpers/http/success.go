@@ -2,18 +2,18 @@ package http
 
 import "net/http"
 
-func NewSuccessCreatedResponse() DefaultResponse {
+func NewSuccessCreatedResponse(message string) DefaultResponse {
 	return DefaultResponse{
 		Code:    http.StatusCreated,
 		Status:  "SUCCESS",
-		Message: "Success Created Data",
+		Message: message,
 	}
 }
 
-func NewSuccessDefaultResponse(data interface{}) DefaultResponse {
+func NewSuccessDefaultResponse(data interface{}, message string) DefaultResponse {
 	return DefaultResponse{
 		Code:   http.StatusOK,
-		Status: "SUCCESS",
+		Status: message,
 		Data:   data,
 	}
 }

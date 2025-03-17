@@ -13,7 +13,7 @@ SELECT
 FROM
     commodities
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -47,7 +47,7 @@ SELECT
 FROM
     commodities
 WHERE
-    commodity_type_id = $1
+    commodity_type_id = sqlc.arg(commodity_type_id)
 AND
     deleted_at IS NULL
 ORDER BY
@@ -68,12 +68,21 @@ FROM
 WHERE
     deleted_at IS NULL
 ORDER BY
-    publish_date DESC
-LIMIT $1;
+    publish_date DESC;
 
 -- name: InsertCommodity :exec
 INSERT INTO commodities(id, name, price, unit, publish_date, description, commodity_type_id, author, created_at)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
+VALUES (
+    sqlc.arg(id),
+    sqlc.arg(name),
+    sqlc.arg(price),
+    sqlc.arg(unit),
+    sqlc.arg(publish_date),
+    sqlc.arg(description),
+    sqlc.arg(commodity_type_id),
+    sqlc.arg(author),
+    sqlc.arg(created_at)
+);
 
 -- name: UpdateCommodity :execrows
 UPDATE

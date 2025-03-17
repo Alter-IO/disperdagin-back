@@ -21,5 +21,5 @@ func (h *Controller) LoginUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(auth))
+	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(auth, "Anda Berhasil Masuk!"))
 }

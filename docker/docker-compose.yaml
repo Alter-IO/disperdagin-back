@@ -3,11 +3,11 @@ services:
     container_name: disperdagin-postgres
     image: postgres:16-alpine3.20
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_disperdagin:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: db_disperdagin
       POSTGRES_USER: devs
-      POSTGRES_PASSWORD: Mypassword123!
+      POSTGRES_PASSWORD: password
     ports:
       - 5432:5432
 

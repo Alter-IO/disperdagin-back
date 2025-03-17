@@ -8,7 +8,7 @@ SELECT
 FROM
     greetings
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -42,7 +42,12 @@ ORDER BY
 
 -- name: InsertGreeting :exec
 INSERT INTO greetings(id, message, author, created_at)
-VALUES ($1, $2, $3, $4);
+VALUES (
+    sqlc.arg(id),
+    sqlc.arg(message),
+    sqlc.arg(author),
+    sqlc.arg(created_at)
+);
 
 -- name: UpdateGreeting :execrows
 UPDATE

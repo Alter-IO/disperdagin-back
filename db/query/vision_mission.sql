@@ -9,7 +9,7 @@ SELECT
 FROM
     vision_mission
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -45,7 +45,13 @@ ORDER BY
 
 -- name: InsertVisionMission :exec
 INSERT INTO vision_mission(id, vision, mission, author, created_at)
-VALUES ($1, $2, $3, $4, $5);
+VALUES (
+    sqlc.arg(id),
+    sqlc.arg(vision),
+    sqlc.arg(mission),
+    sqlc.arg(author),
+    sqlc.arg(created_at)
+);
 
 -- name: UpdateVisionMission :execrows
 UPDATE

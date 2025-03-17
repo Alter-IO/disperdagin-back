@@ -16,7 +16,7 @@ SELECT
 FROM
     market_fees
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -52,7 +52,7 @@ SELECT
 FROM
     market_fees
 WHERE
-    market_id = $1
+    market_id = sqlc.arg(market_id)
 AND
     deleted_at IS NULL
 ORDER BY
@@ -72,7 +72,7 @@ SELECT
 FROM
     market_fees
 WHERE
-    year = $1
+    year = sqlc.arg(year)
 AND
     deleted_at IS NULL
 ORDER BY
@@ -92,9 +92,9 @@ SELECT
 FROM
     market_fees
 WHERE
-    semester = $1
+    semester = sqlc.arg(semester)
 AND
-    year = $2
+    year = sqlc.arg(year)
 AND
     deleted_at IS NULL
 ORDER BY
@@ -115,7 +115,20 @@ INSERT INTO market_fees(
     author, 
     created_at
 )
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);
+VALUES (
+    sqlc.arg(id), 
+    sqlc.arg(market_id), 
+    sqlc.arg(num_permanent_kiosks), 
+    sqlc.arg(num_non_permanent_kiosks), 
+    sqlc.arg(permanent_kiosk_revenue), 
+    sqlc.arg(non_permanent_kiosk_revenue), 
+    sqlc.arg(collection_status), 
+    sqlc.arg(description), 
+    sqlc.arg(semester), 
+    sqlc.arg(year), 
+    sqlc.arg(author), 
+    sqlc.arg(created_at)
+);
 
 -- name: UpdateMarketFee :execrows
 UPDATE

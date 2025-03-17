@@ -8,7 +8,7 @@ SELECT
 FROM
     subdistricts
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -27,7 +27,12 @@ ORDER BY
 
 -- name: InsertSubdistrict :exec
 INSERT INTO subdistricts(id, name, author, created_at)
-VALUES ($1, $2, $3, $4);
+VALUES (
+    sqlc.arg(id),
+    sqlc.arg(name),
+    sqlc.arg(author),
+    sqlc.arg(created_at)
+);
 
 -- name: UpdateSubdistrict :execrows
 UPDATE

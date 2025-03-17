@@ -15,7 +15,7 @@ SELECT
 FROM
     employees
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -47,7 +47,7 @@ SELECT
 FROM
     employees
 WHERE
-    position = $1
+    position = sqlc.arg(position)
 AND
     deleted_at IS NULL
 ORDER BY
@@ -72,7 +72,19 @@ ORDER BY
 
 -- name: InsertEmployee :exec
 INSERT INTO employees(id, name, position, address, employee_id, birthplace, birthdate, photo, status, author, created_at)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
+VALUES (
+    sqlc.arg(id),
+    sqlc.arg(name),
+    sqlc.arg(position),
+    sqlc.arg(address),
+    sqlc.arg(employee_id),
+    sqlc.arg(birthplace),
+    sqlc.arg(birthdate),
+    sqlc.arg(photo),
+    sqlc.arg(status),
+    sqlc.arg(author),
+    sqlc.arg(created_at)
+);
 
 -- name: UpdateEmployee :execrows
 UPDATE

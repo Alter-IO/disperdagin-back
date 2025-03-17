@@ -11,7 +11,7 @@ SELECT
 FROM
     photos
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -41,7 +41,7 @@ SELECT
 FROM
     photos
 WHERE
-    category_id = $1
+    category_id = sqlc.arg(category_id)
 AND
     deleted_at IS NULL
 ORDER BY
@@ -49,7 +49,15 @@ ORDER BY
 
 -- name: InsertPhoto :exec
 INSERT INTO photos(id, category_id, title, file, description, author, created_at)
-VALUES ($1, $2, $3, $4, $5, $6, $7);
+VALUES (
+    sqlc.arg(id),
+    sqlc.arg(category_id),
+    sqlc.arg(title),
+    sqlc.arg(file),
+    sqlc.arg(description),
+    sqlc.arg(author),
+    sqlc.arg(created_at)
+);
 
 -- name: UpdatePhoto :execrows
 UPDATE

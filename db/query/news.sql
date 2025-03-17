@@ -9,7 +9,7 @@ SELECT
 FROM
     news
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -28,7 +28,13 @@ ORDER BY
 
 -- name: InsertNews :exec
 INSERT INTO news(id, title, content, author, created_at)
-VALUES ($1, $2, $3, $4, $5);
+VALUES (
+    sqlc.arg(id),
+    sqlc.arg(title),
+    sqlc.arg(content),
+    sqlc.arg(author),
+    sqlc.arg(created_at)
+);
 
 -- name: UpdateNews :execrows
 UPDATE

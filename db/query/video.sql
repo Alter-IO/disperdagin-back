@@ -10,7 +10,7 @@ SELECT
 FROM
     videos
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -30,7 +30,14 @@ ORDER BY
 
 -- name: InsertVideo :exec
 INSERT INTO videos(id, title, link, description, author, created_at)
-VALUES ($1, $2, $3, $4, $5, $6);
+VALUES (
+    sqlc.arg(id),
+    sqlc.arg(title),
+    sqlc.arg(link),
+    sqlc.arg(description),
+    sqlc.arg(author),
+    sqlc.arg(created_at)
+);
 
 -- name: UpdateVideo :execrows
 UPDATE

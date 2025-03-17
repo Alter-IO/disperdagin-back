@@ -11,7 +11,3 @@ sql:
         emit_json_tags: true
         json_tags_case_style: "snake"
         emit_empty_slices: true
-    database:
-      uri: "postgresql://postgres:postgres@localhost:5432/postgres"
-    rules:
-      - skip_verification

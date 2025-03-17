@@ -9,7 +9,7 @@ SELECT
 FROM
     sectors
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -28,7 +28,13 @@ ORDER BY
 
 -- name: InsertSector :exec
 INSERT INTO sectors(id, name, description, author, created_at)
-VALUES ($1, $2, $3, $4, $5);
+VALUES (
+    sqlc.arg(id),
+    sqlc.arg(name),
+    sqlc.arg(description),
+    sqlc.arg(author),
+    sqlc.arg(created_at)
+);
 
 -- name: UpdateSector :execrows
 UPDATE

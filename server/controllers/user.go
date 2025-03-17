@@ -17,7 +17,7 @@ func (h *Controller) GetAccounts(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(users))
+	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(users, "Akun berhasil ditemukan"))
 }
 
 func (h *Controller) GetUserByID(c *gin.Context) {
@@ -36,7 +36,7 @@ func (h *Controller) GetUserByID(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(user))
+	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(user, "Akun berhasil ditemukan"))
 }
 
 func (h *Controller) GetUserByUsername(c *gin.Context) {
@@ -55,7 +55,7 @@ func (h *Controller) GetUserByUsername(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(user))
+	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(user, "Akun berhasil ditemukan"))
 }
 
 func (h *Controller) CreateUser(c *gin.Context) {
@@ -71,7 +71,7 @@ func (h *Controller) CreateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, common.NewSuccessCreatedResponse())
+	c.JSON(http.StatusCreated, common.NewSuccessCreatedResponse("Akun berhasil dibuat"))
 }
 
 func (h *Controller) UpdatePassword(c *gin.Context) {
@@ -102,7 +102,7 @@ func (h *Controller) UpdatePassword(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse("Password updated successfully"))
+	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(nil, "Kata sandi berhasil diperbarui"))
 }
 
 func (h *Controller) ResetPassword(c *gin.Context) {
@@ -123,10 +123,7 @@ func (h *Controller) ResetPassword(c *gin.Context) {
 	}
 
 	// Return the generated password to the admin
-	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(gin.H{
-		"message":      "Password reset successfully",
-		"new_password": newPassword,
-	}))
+	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(newPassword, "Kata sandi berhasil direset"))
 }
 
 func (h *Controller) DeleteUser(c *gin.Context) {
@@ -144,5 +141,5 @@ func (h *Controller) DeleteUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse("User deleted successfully"))
+	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(nil, "Akun berhasil dihapus"))
 }

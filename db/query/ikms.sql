@@ -10,7 +10,7 @@ SELECT
 FROM
     ikms
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -40,7 +40,7 @@ SELECT
 FROM
     ikms
 WHERE
-    village_id = $1
+    village_id = sqlc.arg(village_id)
 AND
     deleted_at IS NULL
 ORDER BY
@@ -57,7 +57,7 @@ SELECT
 FROM
     ikms
 WHERE
-    business_type = $1
+    business_type = sqlc.arg(business_type)
 AND
     deleted_at IS NULL
 ORDER BY
@@ -65,7 +65,14 @@ ORDER BY
 
 -- name: InsertIKM :exec
 INSERT INTO ikms(id, description, village_id, business_type, author, created_at)
-VALUES ($1, $2, $3, $4, $5, $6);
+VALUES (
+    sqlc.arg(id),
+    sqlc.arg(description),
+    sqlc.arg(village_id),
+    sqlc.arg(business_type),
+    sqlc.arg(author),
+    sqlc.arg(created_at)
+);
 
 -- name: UpdateIKM :execrows
 UPDATE

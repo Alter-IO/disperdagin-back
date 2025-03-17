@@ -9,7 +9,7 @@ SELECT
 FROM
     villages
 WHERE
-    id = $1
+    id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
 
@@ -37,7 +37,7 @@ SELECT
 FROM
     villages
 WHERE
-    subdistrict_id = $1
+    subdistrict_id = sqlc.arg(subdistrict_id)
 AND
     deleted_at IS NULL
 ORDER BY
@@ -45,7 +45,13 @@ ORDER BY
 
 -- name: InsertVillage :exec
 INSERT INTO villages(id, subdistrict_id, name, author, created_at)
-VALUES ($1, $2, $3, $4, $5);
+VALUES (
+    sqlc.arg(id),
+    sqlc.arg(subdistrict_id),
+    sqlc.arg(name),
+    sqlc.arg(author),
+    sqlc.arg(created_at)
+);
 
 -- name: UpdateVillage :execrows
 UPDATE

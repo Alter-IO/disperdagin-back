@@ -29,4 +29,11 @@ func NewRegisterRoutes(router *gin.Engine, handler *controllers.Controller) {
 
 	// Auth Route
 	router.POST("/v1/auth/login", handler.LoginUser)
+
+	// Commodity Type Routes
+	PublicRoute.GET("/v1/commodity-types", handler.GetAllCommodityTypes)
+	PublicRoute.GET("/v1/commodity-types/:id", handler.GetCommodityTypeByID)
+	PublicRoute.POST("/v1/commodity-types", handler.CreateCommodityType)
+	PublicRoute.PUT("/v1/commodity-types/:id", handler.UpdateCommodityType)
+	PublicRoute.DELETE("/v1/commodity-types/:id", handler.DeleteCommodityType)
 }
