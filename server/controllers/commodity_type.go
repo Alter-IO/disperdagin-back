@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 func (h *Controller) GetAllCommodityTypes(c *gin.Context) {
@@ -52,8 +51,8 @@ func (h *Controller) CreateCommodityType(c *gin.Context) {
 	}
 
 	params := postgresql.InsertCommodityTypeParams{
-		Column2: pgtype.Text{String: reqBody.Description, Valid: true},
-		Column3: pgtype.Text{String: reqBody.Author, Valid: true},
+		Description: reqBody.Description,
+		Author:      reqBody.Author,
 	}
 
 	if err := h.service.CreateCommodityType(c, params); err != nil {
@@ -86,8 +85,8 @@ func (h *Controller) UpdateCommodityType(c *gin.Context) {
 	}
 
 	params := postgresql.UpdateCommodityTypeParams{
-		ID:          pgtype.Text{String: id, Valid: true},
-		Description: pgtype.Text{String: reqBody.Description, Valid: true},
+		ID:          id,
+		Description: reqBody.Description,
 	}
 
 	if err := h.service.UpdateCommodityType(c, params); err != nil {

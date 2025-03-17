@@ -24,3 +24,6 @@ sqlc:
 
 logs-api:
 	docker logs disperdagin-api -f -n 100
+
+restart:
+	docker restart disperdagin-api

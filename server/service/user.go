@@ -25,7 +25,7 @@ func (s *Service) GetUsers(ctx context.Context) ([]postgresql.FindUsersRow, erro
 }
 
 func (s *Service) GetUserByID(ctx context.Context, id string) (postgresql.FindUserByIDRow, error) {
-	user, err := s.repo.FindUserByID(ctx, pgtype.Text{String: id, Valid: true})
+	user, err := s.repo.FindUserByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return user, derrors.NewErrorf(derrors.ErrorCodeNotFound, "user tidak ditemukan")
@@ -37,7 +37,7 @@ func (s *Service) GetUserByID(ctx context.Context, id string) (postgresql.FindUs
 }
 
 func (s *Service) GetUserByUsername(ctx context.Context, username string) (postgresql.FindUserByUsernameRow, error) {
-	user, err := s.repo.FindUserByUsername(ctx, pgtype.Text{String: username, Valid: true})
+	user, err := s.repo.FindUserByUsername(ctx, username)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return user, derrors.NewErrorf(derrors.ErrorCodeNotFound, "user tidak ditemukan")
@@ -49,11 +49,11 @@ func (s *Service) GetUserByUsername(ctx context.Context, username string) (postg
 }
 
 func validateCreateUser(data postgresql.InsertUserParams) error {
-	if data.Username.String == "" {
+	if data.Username == "" {
 		return errors.New("username wajib di isi")
 	}
 
-	if data.Password.String == "" {
+	if data.Password == "" {
 		return errors.New("password wajib di isi")
 	}
 
@@ -65,17 +65,13 @@ func (s *Service) CreateUser(ctx context.Context, data postgresql.InsertUserPara
 		return derrors.NewErrorf(derrors.ErrorCodeBadRequest, "%s", err.Error())
 	}
 
+	pw, _ := hash.HashPassword(data.Password)
+
 	params := postgresql.InsertUserParams{
-		ID:       pgtype.Text{String: helpers.GenerateID(), Valid: true},
-		RoleID:   data.RoleID,
-		Username: data.Username,
-		Password: func() pgtype.Text {
-			hashedPassword, err := hash.HashPassword(data.Password.String)
-			if err != nil {
-				return pgtype.Text{String: "", Valid: false}
-			}
-			return pgtype.Text{String: hashedPassword, Valid: true}
-		}(),
+		ID:        helpers.GenerateID(),
+		RoleID:    data.RoleID,
+		Username:  data.Username,
+		Password:  pw,
 		CreatedAt: pgtype.Timestamptz{Time: time.Now(), Valid: true},
 	}
 	if err := s.repo.InsertUser(ctx, params); err != nil {
@@ -91,7 +87,7 @@ func (s *Service) CreateUser(ctx context.Context, data postgresql.InsertUserPara
 
 func (s *Service) UpdatePassword(ctx context.Context, username, oldPassword, newPassword string) error {
 	// Get user by username to verify old password
-	user, err := s.repo.FindUserByUsername(ctx, pgtype.Text{String: username, Valid: true})
+	user, err := s.repo.FindUserByUsername(ctx, username)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return derrors.NewErrorf(derrors.ErrorCodeNotFound, "user tidak ditemukan")
@@ -112,8 +108,8 @@ func (s *Service) UpdatePassword(ctx context.Context, username, oldPassword, new
 
 	// Update the password
 	updateParams := postgresql.UpdatePasswordParams{
-		ID:        pgtype.Text{String: user.ID, Valid: true},
-		Password:  pgtype.Text{String: hashedPassword, Valid: true},
+		ID:        user.ID,
+		Password:  hashedPassword,
 		UpdatedAt: pgtype.Timestamptz{Time: time.Now(), Valid: true},
 	}
 
@@ -131,7 +127,7 @@ func (s *Service) UpdatePassword(ctx context.Context, username, oldPassword, new
 
 func (s *Service) ResetPassword(ctx context.Context, username string) (string, error) {
 	// Find user by username first
-	user, err := s.repo.FindUserByUsername(ctx, pgtype.Text{String: username, Valid: true})
+	user, err := s.repo.FindUserByUsername(ctx, username)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return "", derrors.NewErrorf(derrors.ErrorCodeNotFound, "user tidak ditemukan")
@@ -153,8 +149,8 @@ func (s *Service) ResetPassword(ctx context.Context, username string) (string, e
 
 	// Update the password without checking old password
 	updateParams := postgresql.UpdatePasswordParams{
-		ID:        pgtype.Text{String: user.ID, Valid: true},
-		Password:  pgtype.Text{String: hashedPassword, Valid: true},
+		ID:        user.ID,
+		Password:  hashedPassword,
 		UpdatedAt: pgtype.Timestamptz{Time: time.Now(), Valid: true},
 	}
 
@@ -173,7 +169,7 @@ func (s *Service) ResetPassword(ctx context.Context, username string) (string, e
 
 func (s *Service) DeleteUser(ctx context.Context, username string) error {
 	// Find user by username first
-	user, err := s.repo.FindUserByUsername(ctx, pgtype.Text{String: username, Valid: true})
+	user, err := s.repo.FindUserByUsername(ctx, username)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return derrors.NewErrorf(derrors.ErrorCodeNotFound, "user tidak ditemukan")
@@ -183,7 +179,7 @@ func (s *Service) DeleteUser(ctx context.Context, username string) error {
 
 	// Now delete the user using their ID
 	params := postgresql.DeleteUserParams{
-		ID:        pgtype.Text{String: user.ID, Valid: true},
+		ID:        user.ID,
 		DeletedAt: pgtype.Timestamptz{Time: time.Now(), Valid: true},
 	}
 	rowAffected, err := s.repo.DeleteUser(ctx, params)

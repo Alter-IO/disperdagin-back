@@ -23,7 +23,7 @@ func (s *Service) GetAllCommodityTypes(ctx context.Context) ([]postgresql.FindAl
 }
 
 func (s *Service) GetCommodityTypeByID(ctx context.Context, id string) (postgresql.FindCommodityTypeByIDRow, error) {
-	commodityType, err := s.repo.FindCommodityTypeByID(ctx, pgtype.Text{String: id, Valid: true})
+	commodityType, err := s.repo.FindCommodityTypeByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return commodityType, derrors.NewErrorf(derrors.ErrorCodeNotFound, "tipe komoditas tidak ditemukan")
@@ -35,19 +35,19 @@ func (s *Service) GetCommodityTypeByID(ctx context.Context, id string) (postgres
 }
 
 func (s *Service) CreateCommodityType(ctx context.Context, data postgresql.InsertCommodityTypeParams) error {
-	if data.Column2.String == "" {
+	if data.Description == "" {
 		return derrors.NewErrorf(derrors.ErrorCodeBadRequest, "deskripsi wajib diisi")
 	}
 
-	if data.Column3.String == "" {
+	if data.Author == "" {
 		return derrors.NewErrorf(derrors.ErrorCodeBadRequest, "author wajib diisi")
 	}
 
 	params := postgresql.InsertCommodityTypeParams{
-		Column1: pgtype.Text{String: helpers.GenerateID(), Valid: true},
-		Column2: data.Column2,
-		Column3: data.Column3,
-		Column4: pgtype.Timestamptz{Time: time.Now(), Valid: true},
+		ID:          helpers.GenerateID(),
+		Description: data.Description,
+		Author:      data.Author,
+		CreatedAt:   pgtype.Timestamptz{Time: time.Now(), Valid: true},
 	}
 
 	if err := s.repo.InsertCommodityType(ctx, params); err != nil {
@@ -62,7 +62,7 @@ func (s *Service) CreateCommodityType(ctx context.Context, data postgresql.Inser
 }
 
 func (s *Service) UpdateCommodityType(ctx context.Context, params postgresql.UpdateCommodityTypeParams) error {
-	if params.Description.String == "" {
+	if params.Description == "" {
 		return derrors.NewErrorf(derrors.ErrorCodeBadRequest, "deskripsi wajib diisi")
 	}
 
@@ -87,7 +87,7 @@ func (s *Service) UpdateCommodityType(ctx context.Context, params postgresql.Upd
 
 func (s *Service) DeleteCommodityType(ctx context.Context, id string) error {
 	params := postgresql.DeleteCommodityTypeParams{
-		ID:        pgtype.Text{String: id, Valid: true},
+		ID:        id,
 		DeletedAt: pgtype.Timestamptz{Time: time.Now(), Valid: true},
 	}
 

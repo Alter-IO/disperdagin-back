@@ -9,7 +9,6 @@ import (
 	"errors"
 
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 func (s *Service) Login(ctx context.Context, data domain.LoginReq) (domain.LoginResp, error) {
@@ -17,7 +16,7 @@ func (s *Service) Login(ctx context.Context, data domain.LoginReq) (domain.Login
 		return domain.LoginResp{}, derrors.NewErrorf(derrors.ErrorCodeBadRequest, "%s", err.Error())
 	}
 
-	user, err := s.repo.FindUserByUsername(ctx, pgtype.Text{String: data.Username, Valid: true})
+	user, err := s.repo.FindUserByUsername(ctx, data.Username)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return domain.LoginResp{}, derrors.NewErrorf(derrors.ErrorCodeNotFound, "username atau password salah")
