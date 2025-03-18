@@ -2,9 +2,7 @@ package controllers
 
 import (
 	common "alter-io-go/helpers/http"
-	"alter-io-go/helpers/logger"
 	"alter-io-go/repositories/postgresql"
-	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -35,9 +33,7 @@ func (h *Controller) GetLatestCommodities(c *gin.Context) {
 func (h *Controller) GetCommoditiesByType(c *gin.Context) {
 	typeID := c.Param("typeId")
 	if typeID == "" {
-		err := errors.New("Tipe komoditas ID diperlukan")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse("tipe komoditas id diperlukan"))
 		return
 	}
 
@@ -54,9 +50,7 @@ func (h *Controller) GetCommoditiesByType(c *gin.Context) {
 func (h *Controller) GetCommodityByID(c *gin.Context) {
 	commodityID := c.Param("id")
 	if commodityID == "" {
-		err := errors.New("Komoditas ID diperlukan")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse("tipe komoditas id diperlukan"))
 		return
 	}
 
@@ -73,11 +67,9 @@ func (h *Controller) GetCommodityByID(c *gin.Context) {
 func (h *Controller) CreateCommodity(c *gin.Context) {
 	reqBody := new(postgresql.InsertCommodityParams)
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
-		c.JSON(http.StatusBadRequest, common.MapErrorToResponse(err))
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse(err.Error()))
 		return
 	}
-
-	logger.Get().With().Info("CreateCommodity", "reqBody", reqBody)
 
 	if err := h.service.CreateCommodity(c, *reqBody); err != nil {
 		resp := common.MapErrorToResponse(err)
@@ -91,30 +83,22 @@ func (h *Controller) CreateCommodity(c *gin.Context) {
 func (h *Controller) UpdateCommodity(c *gin.Context) {
 	commodityID := c.Param("id")
 	if commodityID == "" {
-		err := errors.New("Komoditas ID diperlukan")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse("komoditas id diperlukan"))
 		return
 	}
 
 	reqBody := new(postgresql.UpdateCommodityParams)
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse(err.Error()))
 		return
 	}
 
 	// Set the ID from the URL parameter
 	reqBody.ID = commodityID
 
-	rowsAffected, err := h.service.UpdateCommodity(c, *reqBody)
-	if err != nil {
+	if err := h.service.UpdateCommodity(c, *reqBody); err != nil {
 		resp := common.MapErrorToResponse(err)
 		c.JSON(resp.Code, resp)
-		return
-	}
-
-	if rowsAffected == 0 {
-		c.JSON(http.StatusNotFound, err)
 		return
 	}
 
@@ -124,9 +108,7 @@ func (h *Controller) UpdateCommodity(c *gin.Context) {
 func (h *Controller) DeleteCommodity(c *gin.Context) {
 	commodityID := c.Param("id")
 	if commodityID == "" {
-		err := errors.New("Komoditas ID diperlukan")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse("komoditas id diperlukan"))
 		return
 	}
 

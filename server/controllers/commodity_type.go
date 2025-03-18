@@ -3,7 +3,6 @@ package controllers
 import (
 	common "alter-io-go/helpers/http"
 	"alter-io-go/repositories/postgresql"
-	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,9 +22,7 @@ func (h *Controller) GetAllCommodityTypes(c *gin.Context) {
 func (h *Controller) GetCommodityTypeByID(c *gin.Context) {
 	id := c.Param("id")
 	if id == "" {
-		err := errors.New("ID is required")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse("id is required"))
 		return
 	}
 
@@ -67,9 +64,7 @@ func (h *Controller) CreateCommodityType(c *gin.Context) {
 func (h *Controller) UpdateCommodityType(c *gin.Context) {
 	id := c.Param("id")
 	if id == "" {
-		err := errors.New("ID is required")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse("id is required"))
 		return
 	}
 
@@ -78,9 +73,7 @@ func (h *Controller) UpdateCommodityType(c *gin.Context) {
 	}
 
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
-		err := errors.New("Invalid request body")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse(err.Error()))
 		return
 	}
 
@@ -101,9 +94,7 @@ func (h *Controller) UpdateCommodityType(c *gin.Context) {
 func (h *Controller) DeleteCommodityType(c *gin.Context) {
 	id := c.Param("id")
 	if id == "" {
-		err := errors.New("ID is required")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse("id is required"))
 		return
 	}
 

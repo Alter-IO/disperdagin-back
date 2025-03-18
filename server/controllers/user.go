@@ -3,7 +3,6 @@ package controllers
 import (
 	common "alter-io-go/helpers/http"
 	"alter-io-go/repositories/postgresql"
-	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,9 +22,7 @@ func (h *Controller) GetAccounts(c *gin.Context) {
 func (h *Controller) GetUserByID(c *gin.Context) {
 	userID := c.Param("id")
 	if userID == "" {
-		err := errors.New("User ID is required")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse("user id is required"))
 		return
 	}
 
@@ -42,9 +39,7 @@ func (h *Controller) GetUserByID(c *gin.Context) {
 func (h *Controller) GetUserByUsername(c *gin.Context) {
 	username := c.Param("username")
 	if username == "" {
-		err := errors.New("Username is required")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse("username is required"))
 		return
 	}
 
@@ -61,7 +56,7 @@ func (h *Controller) GetUserByUsername(c *gin.Context) {
 func (h *Controller) CreateUser(c *gin.Context) {
 	reqBody := new(postgresql.InsertUserParams)
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse(err.Error()))
 		return
 	}
 
@@ -77,9 +72,7 @@ func (h *Controller) CreateUser(c *gin.Context) {
 func (h *Controller) UpdatePassword(c *gin.Context) {
 	username := c.Param("username")
 	if username == "" {
-		err := errors.New("Username is required")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse("username is required"))
 		return
 	}
 
@@ -90,9 +83,7 @@ func (h *Controller) UpdatePassword(c *gin.Context) {
 
 	reqBody := new(UpdatePasswordRequest)
 	if err := c.ShouldBindJSON(&reqBody); err != nil {
-		err := errors.New("Invalid request body")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse(err.Error()))
 		return
 	}
 
@@ -108,9 +99,7 @@ func (h *Controller) UpdatePassword(c *gin.Context) {
 func (h *Controller) ResetPassword(c *gin.Context) {
 	username := c.Param("username")
 	if username == "" {
-		err := errors.New("Username is required")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse("username is required"))
 		return
 	}
 
@@ -129,9 +118,7 @@ func (h *Controller) ResetPassword(c *gin.Context) {
 func (h *Controller) DeleteUser(c *gin.Context) {
 	username := c.Param("username")
 	if username == "" {
-		err := errors.New("Username is required")
-		resp := common.MapErrorToResponse(err)
-		c.JSON(resp.Code, resp)
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse("username is required"))
 		return
 	}
 

@@ -98,18 +98,18 @@ func (s *Service) CreateCommodity(ctx context.Context, data postgresql.InsertCom
 }
 
 // UpdateCommodity updates an existing commodity
-func (s *Service) UpdateCommodity(ctx context.Context, data postgresql.UpdateCommodityParams) (int64, error) {
+func (s *Service) UpdateCommodity(ctx context.Context, data postgresql.UpdateCommodityParams) error {
 	// Validate data
 	if data.Name == "" {
-		return 0, derrors.NewErrorf(derrors.ErrorCodeBadRequest, "nama komoditas wajib diisi")
+		return derrors.NewErrorf(derrors.ErrorCodeBadRequest, "nama komoditas wajib diisi")
 	}
 
 	if data.Unit == "" {
-		return 0, derrors.NewErrorf(derrors.ErrorCodeBadRequest, "satuan komoditas wajib diisi")
+		return derrors.NewErrorf(derrors.ErrorCodeBadRequest, "satuan komoditas wajib diisi")
 	}
 
 	if data.CommodityTypeID == "" {
-		return 0, derrors.NewErrorf(derrors.ErrorCodeBadRequest, "tipe komoditas wajib diisi")
+		return derrors.NewErrorf(derrors.ErrorCodeBadRequest, "tipe komoditas wajib diisi")
 	}
 
 	// Add current timestamp
@@ -126,10 +126,14 @@ func (s *Service) UpdateCommodity(ctx context.Context, data postgresql.UpdateCom
 
 	rowsAffected, err := s.repo.UpdateCommodity(ctx, params)
 	if err != nil {
-		return 0, derrors.WrapErrorf(err, derrors.ErrorCodeUnknown, postgreErrMsg)
+		return derrors.WrapErrorf(err, derrors.ErrorCodeUnknown, postgreErrMsg)
 	}
 
-	return rowsAffected, nil
+	if rowsAffected == 0 {
+		return derrors.NewErrorf(derrors.ErrorCodeNotFound, "gagal memperbarui komoditas")
+	}
+
+	return nil
 }
 
 // DeleteCommodity soft deletes a commodity
