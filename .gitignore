@@ -28,5 +28,8 @@ server/config/app.toml
 # tmp file
 server/tmp/
 
+# upload file
+server/uploads/
+
 # log file
 server/logs/
