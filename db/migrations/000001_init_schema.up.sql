@@ -127,7 +127,7 @@ CREATE TABLE "photos" (
   "id" VARCHAR PRIMARY KEY,
   "category_id" VARCHAR NOT NULL,
   "title" VARCHAR NOT NULL,
-  "file" VARCHAR,
+  "file_url" VARCHAR,
   "description" TEXT,
   "created_at" TIMESTAMPTZ NOT NULL,
   "updated_at" TIMESTAMPTZ,
@@ -149,7 +149,7 @@ CREATE TABLE "ikms" (
 CREATE TABLE "public_information" (
   "id" VARCHAR PRIMARY KEY,
   "document_name" VARCHAR NOT NULL,
-  "file_name" VARCHAR NOT NULL,
+  "file_url" VARCHAR NOT NULL,
   "public_info_type" VARCHAR NOT NULL,
   "description" TEXT,
   "created_at" TIMESTAMPTZ NOT NULL,
@@ -161,7 +161,7 @@ CREATE TABLE "public_information" (
 CREATE TABLE "legal_documents" (
   "id" VARCHAR PRIMARY KEY,
   "document_name" VARCHAR NOT NULL,
-  "file_name" VARCHAR NOT NULL,
+  "file_url" VARCHAR NOT NULL,
   "document_type" VARCHAR NOT NULL,
   "description" TEXT,
   "created_at" TIMESTAMPTZ NOT NULL,
@@ -173,7 +173,7 @@ CREATE TABLE "legal_documents" (
 CREATE TABLE "ikm_types" (
   "id" VARCHAR PRIMARY KEY,
   "document_name" VARCHAR NOT NULL,
-  "file_name" VARCHAR NOT NULL,
+  "file_url" VARCHAR NOT NULL,
   "public_info_type" VARCHAR NOT NULL,
   "description" TEXT,
   "created_at" TIMESTAMPTZ NOT NULL,
