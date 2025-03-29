@@ -52,4 +52,7 @@ func NewRegisterRoutes(router *gin.Engine, handler *controllers.Controller) {
 	PublicRoute.POST("/v1/employees", handler.CreateEmployee)
 	PublicRoute.PUT("/v1/employees/:id", handler.UpdateEmployee)
 	PublicRoute.DELETE("/v1/employees/:id", handler.DeleteEmployee)
+
+	// Upload Routes
+	SARoute.POST("/v1/uploads", handler.UploadFile)
 }
