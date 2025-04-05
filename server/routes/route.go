@@ -62,6 +62,13 @@ func NewRegisterRoutes(router *gin.Engine, handler *controllers.Controller) {
 	AdminRoute.PUT("/v1/news/:id", handler.UpdateNews)
 	AdminRoute.DELETE("/v1/news/:id", handler.DeleteNews)
 
+	// Sector Routes
+	PublicRoute.GET("/v1/sectors", handler.GetSectors)
+	PublicRoute.GET("/v1/sectors/:id", handler.GetSector)
+	AdminRoute.POST("/v1/sectors", handler.CreateSector)
+	AdminRoute.PUT("/v1/sectors/:id", handler.UpdateSector)
+	AdminRoute.DELETE("/v1/sectors/:id", handler.DeleteSector)
+
 	// Upload Routes
 	AdminRoute.POST("/v1/uploads", handler.UploadFile)
 	PublicRoute.Static("/v1/uploads", "./uploads")
