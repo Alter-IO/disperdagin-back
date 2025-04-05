@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"crypto/rand"
+	"errors"
 	"log"
 	"math"
 	"math/big"
@@ -44,4 +45,12 @@ func GenerateID() string {
 	entropyPool.Put(entropy)
 
 	return id.String()
+}
+
+func ValidateUlid(id string) error {
+	if _, err := ulid.Parse(id); err != nil {
+		return errors.New("id tidak valid")
+	}
+
+	return nil
 }

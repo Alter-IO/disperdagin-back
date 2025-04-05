@@ -17,42 +17,52 @@ func NewRegisterRoutes(router *gin.Engine, handler *controllers.Controller) {
 	SARoute.PUT("/v1/users/reset-password/:username", handler.ResetPassword)
 
 	PublicRoute := router.Group("")
-	PublicRoute.POST("/v1/users", handler.CreateUser)
-	PublicRoute.Use(middlewares.Guard())
+
+	AdminRoute := router.Group("")
+	AdminRoute.Use(middlewares.Guard(), middlewares.CheckUserRoles([]string{"admin"}))
 
 	// User Route
-	PublicRoute.GET("/v1/users", handler.GetAccounts)
-	PublicRoute.GET("/v1/users/:id", handler.GetUserByID)
-	PublicRoute.GET("/v1/users/username/:username", handler.GetUserByUsername)
-	PublicRoute.PUT("/v1/users/password/:username", handler.UpdatePassword)
-	PublicRoute.DELETE("/v1/users/:username", handler.DeleteUser)
+	SARoute.GET("/v1/users", handler.GetAccounts)
+	SARoute.GET("/v1/users/:id", handler.GetUserByID)
+	SARoute.POST("/v1/users", handler.CreateUser)
+	SARoute.GET("/v1/users/username/:username", handler.GetUserByUsername)
+	SARoute.PUT("/v1/users/password/:username", handler.UpdatePassword)
+	SARoute.DELETE("/v1/users/:username", handler.DeleteUser)
 
 	// Auth Route
-	router.POST("/v1/auth/login", handler.LoginUser)
+	PublicRoute.POST("/v1/auth/login", handler.LoginUser)
 
 	// Commodity Type Routes
 	PublicRoute.GET("/v1/commodity-types", handler.GetAllCommodityTypes)
 	PublicRoute.GET("/v1/commodity-types/:id", handler.GetCommodityTypeByID)
-	PublicRoute.POST("/v1/commodity-types", handler.CreateCommodityType)
-	PublicRoute.PUT("/v1/commodity-types/:id", handler.UpdateCommodityType)
-	PublicRoute.DELETE("/v1/commodity-types/:id", handler.DeleteCommodityType)
+	AdminRoute.POST("/v1/commodity-types", handler.CreateCommodityType)
+	AdminRoute.PUT("/v1/commodity-types/:id", handler.UpdateCommodityType)
+	AdminRoute.DELETE("/v1/commodity-types/:id", handler.DeleteCommodityType)
 
 	// Commodity Routes
 	PublicRoute.GET("/v1/commodities", handler.GetAllCommodities)
 	PublicRoute.GET("/v1/commodities/:id", handler.GetCommodityByID)
-	PublicRoute.POST("/v1/commodities", handler.CreateCommodity)
-	PublicRoute.PUT("/v1/commodities/:id", handler.UpdateCommodity)
-	PublicRoute.DELETE("/v1/commodities/:id", handler.DeleteCommodity)
+	AdminRoute.POST("/v1/commodities", handler.CreateCommodity)
+	AdminRoute.PUT("/v1/commodities/:id", handler.UpdateCommodity)
+	AdminRoute.DELETE("/v1/commodities/:id", handler.DeleteCommodity)
 
 	// Employee Routes
 	PublicRoute.GET("/v1/employees", handler.GetAllEmployees)
 	PublicRoute.GET("/v1/employees/active", handler.GetActiveEmployees)
 	PublicRoute.GET("/v1/employees/position/:position", handler.GetEmployeesByPosition)
 	PublicRoute.GET("/v1/employees/:id", handler.GetEmployeeByID)
-	PublicRoute.POST("/v1/employees", handler.CreateEmployee)
-	PublicRoute.PUT("/v1/employees/:id", handler.UpdateEmployee)
-	PublicRoute.DELETE("/v1/employees/:id", handler.DeleteEmployee)
+	AdminRoute.POST("/v1/employees", handler.CreateEmployee)
+	AdminRoute.PUT("/v1/employees/:id", handler.UpdateEmployee)
+	AdminRoute.DELETE("/v1/employees/:id", handler.DeleteEmployee)
+
+	// News Routes
+	PublicRoute.GET("/v1/news", handler.GetAllNews)
+	PublicRoute.GET("/v1/news/:id", handler.GetNewsById)
+	AdminRoute.POST("/v1/news", handler.CreateNews)
+	AdminRoute.PUT("/v1/news/:id", handler.UpdateNews)
+	AdminRoute.DELETE("/v1/news/:id", handler.DeleteNews)
 
 	// Upload Routes
-	SARoute.POST("/v1/uploads", handler.UploadFile)
+	AdminRoute.POST("/v1/uploads", handler.UploadFile)
+	PublicRoute.Static("/v1/uploads", "./uploads")
 }
