@@ -46,7 +46,7 @@ func validateCreateNews(data postgresql.InsertNewsParams) error {
 
 func (s *Service) CreateNews(ctx context.Context, data postgresql.InsertNewsParams) error {
 	if err := validateCreateNews(data); err != nil {
-		return err
+		return derrors.NewErrorf(derrors.ErrorCodeBadRequest, "%s", err.Error())
 	}
 
 	params := postgresql.InsertNewsParams{
@@ -77,7 +77,7 @@ func validateUpdateNews(data postgresql.UpdateNewsParams) error {
 
 func (s *Service) UpdateNews(ctx context.Context, id string, data postgresql.UpdateNewsParams) error {
 	if err := validateUpdateNews(data); err != nil {
-		return err
+		return derrors.NewErrorf(derrors.ErrorCodeBadRequest, "%s", err.Error())
 	}
 
 	params := postgresql.UpdateNewsParams{
