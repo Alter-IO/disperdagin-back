@@ -17,6 +17,9 @@ func NewRegisterRoutes(router *gin.Engine, handler *controllers.Controller) {
 	SARoute.PUT("/v1/users/reset-password/:username", handler.ResetPassword)
 
 	PublicRoute := router.Group("")
+	PublicRoute.GET("/v1/health", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{"status": "ok"})
+	})
 
 	AdminRoute := router.Group("")
 	AdminRoute.Use(middlewares.Guard(), middlewares.CheckUserRoles([]string{"admin"}))
@@ -178,6 +181,13 @@ func NewRegisterRoutes(router *gin.Engine, handler *controllers.Controller) {
 	AdminRoute.POST("/v1/vision-missions", handler.CreateVisionMission)
 	AdminRoute.PUT("/v1/vision-missions/:id", handler.UpdateVisionMission)
 	AdminRoute.DELETE("/v1/vision-missions/:id", handler.DeleteVisionMission)
+
+	// Video Routes
+	PublicRoute.GET("/v1/videos", handler.GetAllVideos)
+	PublicRoute.GET("/v1/videos/:id", handler.GetVideoByID)
+	AdminRoute.POST("/v1/videos", handler.CreateVideo)
+	AdminRoute.PUT("/v1/videos/:id", handler.UpdateVideo)
+	AdminRoute.DELETE("/v1/videos/:id", handler.DeleteVideo)
 
 	// Upload Routes
 	AdminRoute.POST("/v1/uploads", handler.UploadFile)
