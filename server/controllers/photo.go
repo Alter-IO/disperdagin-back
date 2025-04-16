@@ -58,7 +58,7 @@ func (h *Controller) CreatePhoto(c *gin.Context) {
 	var reqBody struct {
 		CategoryID  string `json:"category_id" binding:"required"`
 		Title       string `json:"title" binding:"required"`
-		File        string `json:"file" binding:"required"`
+		FileUrl     string `json:"file_url" binding:"required"`
 		Description string `json:"description"`
 		Author      string `json:"author" binding:"required"`
 	}
@@ -71,7 +71,7 @@ func (h *Controller) CreatePhoto(c *gin.Context) {
 	params := postgresql.InsertPhotoParams{
 		CategoryID:  reqBody.CategoryID,
 		Title:       reqBody.Title,
-		File:        pgx.NewTextFromString(reqBody.File),
+		FileUrl:     pgx.NewTextFromString(reqBody.FileUrl),
 		Description: pgx.NewTextFromString(reqBody.Description),
 		Author:      reqBody.Author,
 	}
@@ -95,7 +95,7 @@ func (h *Controller) UpdatePhoto(c *gin.Context) {
 	var reqBody struct {
 		CategoryID  string `json:"category_id" binding:"required"`
 		Title       string `json:"title" binding:"required"`
-		File        string `json:"file"`
+		FileUrl     string `json:"file_url"`
 		Description string `json:"description"`
 	}
 
@@ -108,7 +108,7 @@ func (h *Controller) UpdatePhoto(c *gin.Context) {
 		ID:          id,
 		CategoryID:  reqBody.CategoryID,
 		Title:       reqBody.Title,
-		File:        pgx.NewTextFromString(reqBody.File),
+		FileUrl:     pgx.NewTextFromString(reqBody.FileUrl),
 		Description: pgx.NewTextFromString(reqBody.Description),
 	}
 

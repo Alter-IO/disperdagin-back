@@ -40,7 +40,7 @@ SELECT
     id,
     category_id,
     title,
-    file,
+    file_url,
     author,
     created_at
 FROM
@@ -55,7 +55,7 @@ type FindAllPhotosRow struct {
 	ID         string             `json:"id"`
 	CategoryID string             `json:"category_id"`
 	Title      string             `json:"title"`
-	File       pgtype.Text        `json:"file"`
+	FileUrl    pgtype.Text        `json:"file_url"`
 	Author     string             `json:"author"`
 	CreatedAt  pgtype.Timestamptz `json:"created_at"`
 }
@@ -73,7 +73,7 @@ func (q *Queries) FindAllPhotos(ctx context.Context) ([]FindAllPhotosRow, error)
 			&i.ID,
 			&i.CategoryID,
 			&i.Title,
-			&i.File,
+			&i.FileUrl,
 			&i.Author,
 			&i.CreatedAt,
 		); err != nil {
@@ -92,7 +92,7 @@ SELECT
     id,
     category_id,
     title,
-    file,
+    file_url,
     description,
     author,
     created_at,
@@ -109,7 +109,7 @@ type FindPhotoByIDRow struct {
 	ID          string             `json:"id"`
 	CategoryID  string             `json:"category_id"`
 	Title       string             `json:"title"`
-	File        pgtype.Text        `json:"file"`
+	FileUrl     pgtype.Text        `json:"file_url"`
 	Description pgtype.Text        `json:"description"`
 	Author      string             `json:"author"`
 	CreatedAt   pgtype.Timestamptz `json:"created_at"`
@@ -123,7 +123,7 @@ func (q *Queries) FindPhotoByID(ctx context.Context, id string) (FindPhotoByIDRo
 		&i.ID,
 		&i.CategoryID,
 		&i.Title,
-		&i.File,
+		&i.FileUrl,
 		&i.Description,
 		&i.Author,
 		&i.CreatedAt,
@@ -137,7 +137,7 @@ SELECT
     id,
     category_id,
     title,
-    file,
+    file_url,
     author,
     created_at
 FROM
@@ -154,7 +154,7 @@ type FindPhotosByCategoryRow struct {
 	ID         string             `json:"id"`
 	CategoryID string             `json:"category_id"`
 	Title      string             `json:"title"`
-	File       pgtype.Text        `json:"file"`
+	FileUrl    pgtype.Text        `json:"file_url"`
 	Author     string             `json:"author"`
 	CreatedAt  pgtype.Timestamptz `json:"created_at"`
 }
@@ -172,7 +172,7 @@ func (q *Queries) FindPhotosByCategory(ctx context.Context, categoryID string) (
 			&i.ID,
 			&i.CategoryID,
 			&i.Title,
-			&i.File,
+			&i.FileUrl,
 			&i.Author,
 			&i.CreatedAt,
 		); err != nil {
@@ -187,7 +187,7 @@ func (q *Queries) FindPhotosByCategory(ctx context.Context, categoryID string) (
 }
 
 const insertPhoto = `-- name: InsertPhoto :exec
-INSERT INTO photos(id, category_id, title, file, description, author, created_at)
+INSERT INTO photos(id, category_id, title, file_url, description, author, created_at)
 VALUES (
     $1,
     $2,
@@ -203,7 +203,7 @@ type InsertPhotoParams struct {
 	ID          string             `json:"id"`
 	CategoryID  string             `json:"category_id"`
 	Title       string             `json:"title"`
-	File        pgtype.Text        `json:"file"`
+	FileUrl     pgtype.Text        `json:"file_url"`
 	Description pgtype.Text        `json:"description"`
 	Author      string             `json:"author"`
 	CreatedAt   pgtype.Timestamptz `json:"created_at"`
@@ -214,7 +214,7 @@ func (q *Queries) InsertPhoto(ctx context.Context, arg InsertPhotoParams) error 
 		arg.ID,
 		arg.CategoryID,
 		arg.Title,
-		arg.File,
+		arg.FileUrl,
 		arg.Description,
 		arg.Author,
 		arg.CreatedAt,
@@ -229,7 +229,7 @@ SET
     category_id = $1,
     title = $2,
     description = $3,
-    file = $4,
+    file_url = $4,
     updated_at = $5
 WHERE
     id = $6
@@ -241,7 +241,7 @@ type UpdatePhotoParams struct {
 	CategoryID  string             `json:"category_id"`
 	Title       string             `json:"title"`
 	Description pgtype.Text        `json:"description"`
-	File        pgtype.Text        `json:"file"`
+	FileUrl     pgtype.Text        `json:"file_url"`
 	UpdatedAt   pgtype.Timestamptz `json:"updated_at"`
 	ID          string             `json:"id"`
 }
@@ -251,7 +251,7 @@ func (q *Queries) UpdatePhoto(ctx context.Context, arg UpdatePhotoParams) (int64
 		arg.CategoryID,
 		arg.Title,
 		arg.Description,
-		arg.File,
+		arg.FileUrl,
 		arg.UpdatedAt,
 		arg.ID,
 	)

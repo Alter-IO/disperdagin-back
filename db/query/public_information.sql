@@ -2,7 +2,7 @@
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     public_info_type,
     description,
     author,
@@ -19,7 +19,7 @@ AND
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     public_info_type,
     author,
     created_at
@@ -34,7 +34,7 @@ ORDER BY
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     public_info_type,
     author,
     created_at
@@ -48,11 +48,11 @@ ORDER BY
     created_at DESC;
 
 -- name: InsertPublicInfo :exec
-INSERT INTO public_information(id, document_name, file_name, public_info_type, description, author, created_at)
+INSERT INTO public_information(id, document_name, file_url, public_info_type, description, author, created_at)
 VALUES (
     sqlc.arg(id),
     sqlc.arg(document_name),
-    sqlc.arg(file_name),
+    sqlc.arg(file_url),
     sqlc.arg(public_info_type),
     sqlc.arg(description),
     sqlc.arg(author),
@@ -64,7 +64,7 @@ UPDATE
     public_information
 SET
     document_name = sqlc.arg(document_name),
-    file_name = sqlc.arg(file_name),
+    file_url = sqlc.arg(file_url),
     public_info_type = sqlc.arg(public_info_type),
     description = sqlc.arg(description),
     updated_at = sqlc.arg(updated_at)

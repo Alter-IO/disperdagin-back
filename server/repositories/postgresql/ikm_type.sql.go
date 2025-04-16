@@ -39,7 +39,7 @@ const findAllIKMTypes = `-- name: FindAllIKMTypes :many
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     public_info_type,
     author,
     created_at
@@ -54,7 +54,7 @@ ORDER BY
 type FindAllIKMTypesRow struct {
 	ID             string             `json:"id"`
 	DocumentName   string             `json:"document_name"`
-	FileName       string             `json:"file_name"`
+	FileUrl        string             `json:"file_url"`
 	PublicInfoType string             `json:"public_info_type"`
 	Author         string             `json:"author"`
 	CreatedAt      pgtype.Timestamptz `json:"created_at"`
@@ -72,7 +72,7 @@ func (q *Queries) FindAllIKMTypes(ctx context.Context) ([]FindAllIKMTypesRow, er
 		if err := rows.Scan(
 			&i.ID,
 			&i.DocumentName,
-			&i.FileName,
+			&i.FileUrl,
 			&i.PublicInfoType,
 			&i.Author,
 			&i.CreatedAt,
@@ -91,7 +91,7 @@ const findIKMTypeByID = `-- name: FindIKMTypeByID :one
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     public_info_type,
     description,
     author,
@@ -108,7 +108,7 @@ AND
 type FindIKMTypeByIDRow struct {
 	ID             string             `json:"id"`
 	DocumentName   string             `json:"document_name"`
-	FileName       string             `json:"file_name"`
+	FileUrl        string             `json:"file_url"`
 	PublicInfoType string             `json:"public_info_type"`
 	Description    pgtype.Text        `json:"description"`
 	Author         string             `json:"author"`
@@ -122,7 +122,7 @@ func (q *Queries) FindIKMTypeByID(ctx context.Context, id string) (FindIKMTypeBy
 	err := row.Scan(
 		&i.ID,
 		&i.DocumentName,
-		&i.FileName,
+		&i.FileUrl,
 		&i.PublicInfoType,
 		&i.Description,
 		&i.Author,
@@ -136,7 +136,7 @@ const findIKMTypesByInfoType = `-- name: FindIKMTypesByInfoType :many
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     public_info_type,
     author,
     created_at
@@ -153,7 +153,7 @@ ORDER BY
 type FindIKMTypesByInfoTypeRow struct {
 	ID             string             `json:"id"`
 	DocumentName   string             `json:"document_name"`
-	FileName       string             `json:"file_name"`
+	FileUrl        string             `json:"file_url"`
 	PublicInfoType string             `json:"public_info_type"`
 	Author         string             `json:"author"`
 	CreatedAt      pgtype.Timestamptz `json:"created_at"`
@@ -171,7 +171,7 @@ func (q *Queries) FindIKMTypesByInfoType(ctx context.Context, publicInfoType str
 		if err := rows.Scan(
 			&i.ID,
 			&i.DocumentName,
-			&i.FileName,
+			&i.FileUrl,
 			&i.PublicInfoType,
 			&i.Author,
 			&i.CreatedAt,
@@ -187,7 +187,7 @@ func (q *Queries) FindIKMTypesByInfoType(ctx context.Context, publicInfoType str
 }
 
 const insertIKMType = `-- name: InsertIKMType :exec
-INSERT INTO ikm_types(id, document_name, file_name, public_info_type, description, author, created_at)
+INSERT INTO ikm_types(id, document_name, file_url, public_info_type, description, author, created_at)
 VALUES (
     $1,
     $2,
@@ -202,7 +202,7 @@ VALUES (
 type InsertIKMTypeParams struct {
 	ID             string             `json:"id"`
 	DocumentName   string             `json:"document_name"`
-	FileName       string             `json:"file_name"`
+	FileUrl        string             `json:"file_url"`
 	PublicInfoType string             `json:"public_info_type"`
 	Description    pgtype.Text        `json:"description"`
 	Author         string             `json:"author"`
@@ -213,7 +213,7 @@ func (q *Queries) InsertIKMType(ctx context.Context, arg InsertIKMTypeParams) er
 	_, err := q.db.Exec(ctx, insertIKMType,
 		arg.ID,
 		arg.DocumentName,
-		arg.FileName,
+		arg.FileUrl,
 		arg.PublicInfoType,
 		arg.Description,
 		arg.Author,
@@ -227,7 +227,7 @@ UPDATE
     ikm_types
 SET
     document_name = $1,
-    file_name = $2,
+    file_url = $2,
     public_info_type = $3,
     description = $4,
     updated_at = $5
@@ -239,7 +239,7 @@ AND
 
 type UpdateIKMTypeParams struct {
 	DocumentName   string             `json:"document_name"`
-	FileName       string             `json:"file_name"`
+	FileUrl        string             `json:"file_url"`
 	PublicInfoType string             `json:"public_info_type"`
 	Description    pgtype.Text        `json:"description"`
 	UpdatedAt      pgtype.Timestamptz `json:"updated_at"`
@@ -249,7 +249,7 @@ type UpdateIKMTypeParams struct {
 func (q *Queries) UpdateIKMType(ctx context.Context, arg UpdateIKMTypeParams) (int64, error) {
 	result, err := q.db.Exec(ctx, updateIKMType,
 		arg.DocumentName,
-		arg.FileName,
+		arg.FileUrl,
 		arg.PublicInfoType,
 		arg.Description,
 		arg.UpdatedAt,

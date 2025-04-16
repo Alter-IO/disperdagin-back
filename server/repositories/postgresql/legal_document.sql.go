@@ -39,7 +39,7 @@ const findAllLegalDocuments = `-- name: FindAllLegalDocuments :many
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     document_type,
     author,
     created_at
@@ -54,7 +54,7 @@ ORDER BY
 type FindAllLegalDocumentsRow struct {
 	ID           string             `json:"id"`
 	DocumentName string             `json:"document_name"`
-	FileName     string             `json:"file_name"`
+	FileUrl      string             `json:"file_url"`
 	DocumentType string             `json:"document_type"`
 	Author       string             `json:"author"`
 	CreatedAt    pgtype.Timestamptz `json:"created_at"`
@@ -72,7 +72,7 @@ func (q *Queries) FindAllLegalDocuments(ctx context.Context) ([]FindAllLegalDocu
 		if err := rows.Scan(
 			&i.ID,
 			&i.DocumentName,
-			&i.FileName,
+			&i.FileUrl,
 			&i.DocumentType,
 			&i.Author,
 			&i.CreatedAt,
@@ -91,7 +91,7 @@ const findLegalDocumentByID = `-- name: FindLegalDocumentByID :one
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     document_type,
     description,
     author,
@@ -108,7 +108,7 @@ AND
 type FindLegalDocumentByIDRow struct {
 	ID           string             `json:"id"`
 	DocumentName string             `json:"document_name"`
-	FileName     string             `json:"file_name"`
+	FileUrl      string             `json:"file_url"`
 	DocumentType string             `json:"document_type"`
 	Description  pgtype.Text        `json:"description"`
 	Author       string             `json:"author"`
@@ -122,7 +122,7 @@ func (q *Queries) FindLegalDocumentByID(ctx context.Context, id string) (FindLeg
 	err := row.Scan(
 		&i.ID,
 		&i.DocumentName,
-		&i.FileName,
+		&i.FileUrl,
 		&i.DocumentType,
 		&i.Description,
 		&i.Author,
@@ -136,7 +136,7 @@ const findLegalDocumentsByType = `-- name: FindLegalDocumentsByType :many
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     document_type,
     author,
     created_at
@@ -153,7 +153,7 @@ ORDER BY
 type FindLegalDocumentsByTypeRow struct {
 	ID           string             `json:"id"`
 	DocumentName string             `json:"document_name"`
-	FileName     string             `json:"file_name"`
+	FileUrl      string             `json:"file_url"`
 	DocumentType string             `json:"document_type"`
 	Author       string             `json:"author"`
 	CreatedAt    pgtype.Timestamptz `json:"created_at"`
@@ -171,7 +171,7 @@ func (q *Queries) FindLegalDocumentsByType(ctx context.Context, documentType str
 		if err := rows.Scan(
 			&i.ID,
 			&i.DocumentName,
-			&i.FileName,
+			&i.FileUrl,
 			&i.DocumentType,
 			&i.Author,
 			&i.CreatedAt,
@@ -187,7 +187,7 @@ func (q *Queries) FindLegalDocumentsByType(ctx context.Context, documentType str
 }
 
 const insertLegalDocument = `-- name: InsertLegalDocument :exec
-INSERT INTO legal_documents(id, document_name, file_name, document_type, description, author, created_at)
+INSERT INTO legal_documents(id, document_name, file_url, document_type, description, author, created_at)
 VALUES (
     $1,
     $2,
@@ -202,7 +202,7 @@ VALUES (
 type InsertLegalDocumentParams struct {
 	ID           string             `json:"id"`
 	DocumentName string             `json:"document_name"`
-	FileName     string             `json:"file_name"`
+	FileUrl      string             `json:"file_url"`
 	DocumentType string             `json:"document_type"`
 	Description  pgtype.Text        `json:"description"`
 	Author       string             `json:"author"`
@@ -213,7 +213,7 @@ func (q *Queries) InsertLegalDocument(ctx context.Context, arg InsertLegalDocume
 	_, err := q.db.Exec(ctx, insertLegalDocument,
 		arg.ID,
 		arg.DocumentName,
-		arg.FileName,
+		arg.FileUrl,
 		arg.DocumentType,
 		arg.Description,
 		arg.Author,
@@ -227,7 +227,7 @@ UPDATE
     legal_documents
 SET
     document_name = $1,
-    file_name = $2,
+    file_url = $2,
     document_type = $3,
     description = $4,
     updated_at = $5
@@ -239,7 +239,7 @@ AND
 
 type UpdateLegalDocumentParams struct {
 	DocumentName string             `json:"document_name"`
-	FileName     string             `json:"file_name"`
+	FileUrl      string             `json:"file_url"`
 	DocumentType string             `json:"document_type"`
 	Description  pgtype.Text        `json:"description"`
 	UpdatedAt    pgtype.Timestamptz `json:"updated_at"`
@@ -249,7 +249,7 @@ type UpdateLegalDocumentParams struct {
 func (q *Queries) UpdateLegalDocument(ctx context.Context, arg UpdateLegalDocumentParams) (int64, error) {
 	result, err := q.db.Exec(ctx, updateLegalDocument,
 		arg.DocumentName,
-		arg.FileName,
+		arg.FileUrl,
 		arg.DocumentType,
 		arg.Description,
 		arg.UpdatedAt,

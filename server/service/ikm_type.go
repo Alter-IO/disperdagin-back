@@ -47,7 +47,7 @@ func validateCreateIKMType(data postgresql.InsertIKMTypeParams) error {
 		return errors.New("nama dokumen wajib diisi")
 	}
 
-	if data.FileName == "" {
+	if data.FileUrl == "" {
 		return errors.New("nama file wajib diisi")
 	}
 
@@ -70,7 +70,7 @@ func (s *Service) CreateIKMType(ctx context.Context, data postgresql.InsertIKMTy
 	params := postgresql.InsertIKMTypeParams{
 		ID:             helpers.GenerateID(),
 		DocumentName:   data.DocumentName,
-		FileName:       data.FileName,
+		FileUrl:        data.FileUrl,
 		PublicInfoType: data.PublicInfoType,
 		Description:    data.Description,
 		Author:         data.Author,
@@ -89,7 +89,7 @@ func validateUpdateIKMType(data postgresql.UpdateIKMTypeParams) error {
 		return errors.New("nama dokumen wajib diisi")
 	}
 
-	if data.FileName == "" {
+	if data.FileUrl == "" {
 		return errors.New("nama file wajib diisi")
 	}
 
@@ -108,7 +108,7 @@ func (s *Service) UpdateIKMType(ctx context.Context, data postgresql.UpdateIKMTy
 	params := postgresql.UpdateIKMTypeParams{
 		ID:             data.ID,
 		DocumentName:   data.DocumentName,
-		FileName:       data.FileName,
+		FileUrl:        data.FileUrl,
 		PublicInfoType: data.PublicInfoType,
 		Description:    data.Description,
 		UpdatedAt:      pgtype.Timestamptz{Time: time.Now(), Valid: true},

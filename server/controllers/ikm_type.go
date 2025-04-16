@@ -57,7 +57,7 @@ func (h *Controller) GetIKMTypesByInfoType(c *gin.Context) {
 func (h *Controller) CreateIKMType(c *gin.Context) {
 	var reqBody struct {
 		DocumentName   string `json:"document_name" binding:"required"`
-		FileName       string `json:"file_name" binding:"required"`
+		FileUrl        string `json:"file_url" binding:"required"`
 		PublicInfoType string `json:"public_info_type" binding:"required"`
 		Description    string `json:"description"`
 		Author         string `json:"author" binding:"required"`
@@ -70,7 +70,7 @@ func (h *Controller) CreateIKMType(c *gin.Context) {
 
 	params := postgresql.InsertIKMTypeParams{
 		DocumentName:   reqBody.DocumentName,
-		FileName:       reqBody.FileName,
+		FileUrl:        reqBody.FileUrl,
 		PublicInfoType: reqBody.PublicInfoType,
 		Description:    pgx.NewTextFromString(reqBody.Description),
 		Author:         reqBody.Author,
@@ -94,7 +94,7 @@ func (h *Controller) UpdateIKMType(c *gin.Context) {
 
 	var reqBody struct {
 		DocumentName   string `json:"document_name" binding:"required"`
-		FileName       string `json:"file_name" binding:"required"`
+		FileUrl        string `json:"file_url" binding:"required"`
 		PublicInfoType string `json:"public_info_type" binding:"required"`
 		Description    string `json:"description"`
 	}
@@ -107,7 +107,7 @@ func (h *Controller) UpdateIKMType(c *gin.Context) {
 	params := postgresql.UpdateIKMTypeParams{
 		ID:             id,
 		DocumentName:   reqBody.DocumentName,
-		FileName:       reqBody.FileName,
+		FileUrl:        reqBody.FileUrl,
 		PublicInfoType: reqBody.PublicInfoType,
 		Description:    pgx.NewTextFromString(reqBody.Description),
 	}

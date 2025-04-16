@@ -47,7 +47,7 @@ func validateCreateLegalDocument(data postgresql.InsertLegalDocumentParams) erro
 		return errors.New("nama dokumen wajib diisi")
 	}
 
-	if data.FileName == "" {
+	if data.FileUrl == "" {
 		return errors.New("nama file wajib diisi")
 	}
 
@@ -73,7 +73,7 @@ func (s *Service) CreateLegalDocument(ctx context.Context, data postgresql.Inser
 	params := postgresql.InsertLegalDocumentParams{
 		ID:           helpers.GenerateID(),
 		DocumentName: data.DocumentName,
-		FileName:     data.FileName,
+		FileUrl:      data.FileUrl,
 		DocumentType: data.DocumentType,
 		Description:  data.Description,
 		Author:       data.Author,
@@ -92,7 +92,7 @@ func validateUpdateLegalDocument(data postgresql.UpdateLegalDocumentParams) erro
 		return errors.New("nama dokumen wajib diisi")
 	}
 
-	if data.FileName == "" {
+	if data.FileUrl == "" {
 		return errors.New("nama file wajib diisi")
 	}
 
@@ -114,7 +114,7 @@ func (s *Service) UpdateLegalDocument(ctx context.Context, data postgresql.Updat
 	params := postgresql.UpdateLegalDocumentParams{
 		ID:           data.ID,
 		DocumentName: data.DocumentName,
-		FileName:     data.FileName,
+		FileUrl:      data.FileUrl,
 		DocumentType: data.DocumentType,
 		Description:  data.Description,
 		UpdatedAt:    pgtype.Timestamptz{Time: time.Now(), Valid: true},

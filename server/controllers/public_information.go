@@ -57,7 +57,7 @@ func (h *Controller) GetPublicInfoByType(c *gin.Context) {
 func (h *Controller) CreatePublicInfo(c *gin.Context) {
 	var reqBody struct {
 		DocumentName   string `json:"document_name" binding:"required"`
-		FileName       string `json:"file_name" binding:"required"`
+		FileUrl        string `json:"file_name" binding:"required"`
 		PublicInfoType string `json:"public_info_type" binding:"required"`
 		Description    string `json:"description"`
 		Author         string `json:"author" binding:"required"`
@@ -70,7 +70,7 @@ func (h *Controller) CreatePublicInfo(c *gin.Context) {
 
 	params := postgresql.InsertPublicInfoParams{
 		DocumentName:   reqBody.DocumentName,
-		FileName:       reqBody.FileName,
+		FileUrl:        reqBody.FileUrl,
 		PublicInfoType: reqBody.PublicInfoType,
 		Description:    pgx.NewTextFromString(reqBody.Description),
 		Author:         reqBody.Author,
@@ -94,7 +94,7 @@ func (h *Controller) UpdatePublicInfo(c *gin.Context) {
 
 	var reqBody struct {
 		DocumentName   string `json:"document_name" binding:"required"`
-		FileName       string `json:"file_name" binding:"required"`
+		FileUrl        string `json:"file_name" binding:"required"`
 		PublicInfoType string `json:"public_info_type" binding:"required"`
 		Description    string `json:"description"`
 	}
@@ -107,7 +107,7 @@ func (h *Controller) UpdatePublicInfo(c *gin.Context) {
 	params := postgresql.UpdatePublicInfoParams{
 		ID:             id,
 		DocumentName:   reqBody.DocumentName,
-		FileName:       reqBody.FileName,
+		FileUrl:        reqBody.FileUrl,
 		PublicInfoType: reqBody.PublicInfoType,
 		Description:    pgx.NewTextFromString(reqBody.Description),
 	}

@@ -60,7 +60,7 @@ func validateCreatePhoto(data postgresql.InsertPhotoParams) error {
 		return errors.New("judul foto wajib diisi")
 	}
 
-	if !data.File.Valid || data.File.String == "" {
+	if !data.FileUrl.Valid || data.FileUrl.String == "" {
 		return errors.New("file foto wajib diisi")
 	}
 
@@ -89,7 +89,7 @@ func (s *Service) CreatePhoto(ctx context.Context, data postgresql.InsertPhotoPa
 		ID:          helpers.GenerateID(),
 		CategoryID:  data.CategoryID,
 		Title:       data.Title,
-		File:        data.File,
+		FileUrl:     data.FileUrl,
 		Description: data.Description,
 		Author:      data.Author,
 		CreatedAt:   pgtype.Timestamptz{Time: time.Now(), Valid: true},
@@ -133,7 +133,7 @@ func (s *Service) UpdatePhoto(ctx context.Context, data postgresql.UpdatePhotoPa
 		CategoryID:  data.CategoryID,
 		Title:       data.Title,
 		Description: data.Description,
-		File:        data.File,
+		FileUrl:     data.FileUrl,
 		UpdatedAt:   pgtype.Timestamptz{Time: time.Now(), Valid: true},
 	}
 

@@ -2,7 +2,7 @@
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     document_type,
     description,
     author,
@@ -19,7 +19,7 @@ AND
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     document_type,
     author,
     created_at
@@ -34,7 +34,7 @@ ORDER BY
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     document_type,
     author,
     created_at
@@ -48,11 +48,11 @@ ORDER BY
     created_at DESC;
 
 -- name: InsertLegalDocument :exec
-INSERT INTO legal_documents(id, document_name, file_name, document_type, description, author, created_at)
+INSERT INTO legal_documents(id, document_name, file_url, document_type, description, author, created_at)
 VALUES (
     sqlc.arg(id),
     sqlc.arg(document_name),
-    sqlc.arg(file_name),
+    sqlc.arg(file_url),
     sqlc.arg(document_type),
     sqlc.arg(description),
     sqlc.arg(author),
@@ -64,7 +64,7 @@ UPDATE
     legal_documents
 SET
     document_name = sqlc.arg(document_name),
-    file_name = sqlc.arg(file_name),
+    file_url = sqlc.arg(file_url),
     document_type = sqlc.arg(document_type),
     description = sqlc.arg(description),
     updated_at = sqlc.arg(updated_at)

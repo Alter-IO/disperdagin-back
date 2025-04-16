@@ -3,7 +3,7 @@ SELECT
     id,
     category_id,
     title,
-    file,
+    file_url,
     description,
     author,
     created_at,
@@ -20,7 +20,7 @@ SELECT
     id,
     category_id,
     title,
-    file,
+    file_url,
     author,
     created_at
 FROM
@@ -35,7 +35,7 @@ SELECT
     id,
     category_id,
     title,
-    file,
+    file_url,
     author,
     created_at
 FROM
@@ -48,12 +48,12 @@ ORDER BY
     created_at DESC;
 
 -- name: InsertPhoto :exec
-INSERT INTO photos(id, category_id, title, file, description, author, created_at)
+INSERT INTO photos(id, category_id, title, file_url, description, author, created_at)
 VALUES (
     sqlc.arg(id),
     sqlc.arg(category_id),
     sqlc.arg(title),
-    sqlc.arg(file),
+    sqlc.arg(file_url),
     sqlc.arg(description),
     sqlc.arg(author),
     sqlc.arg(created_at)
@@ -66,7 +66,7 @@ SET
     category_id = sqlc.arg(category_id),
     title = sqlc.arg(title),
     description = sqlc.arg(description),
-    file = sqlc.arg(file),
+    file_url = sqlc.arg(file_url),
     updated_at = sqlc.arg(updated_at)
 WHERE
     id = sqlc.arg(id)

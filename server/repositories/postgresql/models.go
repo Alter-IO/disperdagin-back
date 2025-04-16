@@ -70,7 +70,7 @@ type Ikm struct {
 type IkmType struct {
 	ID             string             `json:"id"`
 	DocumentName   string             `json:"document_name"`
-	FileName       string             `json:"file_name"`
+	FileUrl        string             `json:"file_url"`
 	PublicInfoType string             `json:"public_info_type"`
 	Description    pgtype.Text        `json:"description"`
 	CreatedAt      pgtype.Timestamptz `json:"created_at"`
@@ -82,7 +82,7 @@ type IkmType struct {
 type LegalDocument struct {
 	ID           string             `json:"id"`
 	DocumentName string             `json:"document_name"`
-	FileName     string             `json:"file_name"`
+	FileUrl      string             `json:"file_url"`
 	DocumentType string             `json:"document_type"`
 	Description  pgtype.Text        `json:"description"`
 	CreatedAt    pgtype.Timestamptz `json:"created_at"`
@@ -140,7 +140,7 @@ type Photo struct {
 	ID          string             `json:"id"`
 	CategoryID  string             `json:"category_id"`
 	Title       string             `json:"title"`
-	File        pgtype.Text        `json:"file"`
+	FileUrl     pgtype.Text        `json:"file_url"`
 	Description pgtype.Text        `json:"description"`
 	CreatedAt   pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt   pgtype.Timestamptz `json:"updated_at"`
@@ -160,7 +160,7 @@ type PhotoCategory struct {
 type PublicInformation struct {
 	ID             string             `json:"id"`
 	DocumentName   string             `json:"document_name"`
-	FileName       string             `json:"file_name"`
+	FileUrl        string             `json:"file_url"`
 	PublicInfoType string             `json:"public_info_type"`
 	Description    pgtype.Text        `json:"description"`
 	CreatedAt      pgtype.Timestamptz `json:"created_at"`

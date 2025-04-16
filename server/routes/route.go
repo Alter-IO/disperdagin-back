@@ -24,6 +24,9 @@ func NewRegisterRoutes(router *gin.Engine, handler *controllers.Controller) {
 	AdminRoute := router.Group("")
 	AdminRoute.Use(middlewares.Guard(), middlewares.CheckUserRoles([]string{"admin"}))
 
+	// Role Route
+	PublicRoute.GET("/v1/roles", handler.GetRoles)
+
 	// User Route
 	SARoute.GET("/v1/users", handler.GetAccounts)
 	SARoute.GET("/v1/users/:id", handler.GetUserByID)

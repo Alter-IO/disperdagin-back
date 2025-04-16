@@ -39,7 +39,7 @@ const findAllPublicInfo = `-- name: FindAllPublicInfo :many
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     public_info_type,
     author,
     created_at
@@ -54,7 +54,7 @@ ORDER BY
 type FindAllPublicInfoRow struct {
 	ID             string             `json:"id"`
 	DocumentName   string             `json:"document_name"`
-	FileName       string             `json:"file_name"`
+	FileUrl        string             `json:"file_url"`
 	PublicInfoType string             `json:"public_info_type"`
 	Author         string             `json:"author"`
 	CreatedAt      pgtype.Timestamptz `json:"created_at"`
@@ -72,7 +72,7 @@ func (q *Queries) FindAllPublicInfo(ctx context.Context) ([]FindAllPublicInfoRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.DocumentName,
-			&i.FileName,
+			&i.FileUrl,
 			&i.PublicInfoType,
 			&i.Author,
 			&i.CreatedAt,
@@ -91,7 +91,7 @@ const findPublicInfoByID = `-- name: FindPublicInfoByID :one
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     public_info_type,
     description,
     author,
@@ -108,7 +108,7 @@ AND
 type FindPublicInfoByIDRow struct {
 	ID             string             `json:"id"`
 	DocumentName   string             `json:"document_name"`
-	FileName       string             `json:"file_name"`
+	FileUrl        string             `json:"file_url"`
 	PublicInfoType string             `json:"public_info_type"`
 	Description    pgtype.Text        `json:"description"`
 	Author         string             `json:"author"`
@@ -122,7 +122,7 @@ func (q *Queries) FindPublicInfoByID(ctx context.Context, id string) (FindPublic
 	err := row.Scan(
 		&i.ID,
 		&i.DocumentName,
-		&i.FileName,
+		&i.FileUrl,
 		&i.PublicInfoType,
 		&i.Description,
 		&i.Author,
@@ -136,7 +136,7 @@ const findPublicInfoByType = `-- name: FindPublicInfoByType :many
 SELECT
     id,
     document_name,
-    file_name,
+    file_url,
     public_info_type,
     author,
     created_at
@@ -153,7 +153,7 @@ ORDER BY
 type FindPublicInfoByTypeRow struct {
 	ID             string             `json:"id"`
 	DocumentName   string             `json:"document_name"`
-	FileName       string             `json:"file_name"`
+	FileUrl        string             `json:"file_url"`
 	PublicInfoType string             `json:"public_info_type"`
 	Author         string             `json:"author"`
 	CreatedAt      pgtype.Timestamptz `json:"created_at"`
@@ -171,7 +171,7 @@ func (q *Queries) FindPublicInfoByType(ctx context.Context, publicInfoType strin
 		if err := rows.Scan(
 			&i.ID,
 			&i.DocumentName,
-			&i.FileName,
+			&i.FileUrl,
 			&i.PublicInfoType,
 			&i.Author,
 			&i.CreatedAt,
@@ -187,7 +187,7 @@ func (q *Queries) FindPublicInfoByType(ctx context.Context, publicInfoType strin
 }
 
 const insertPublicInfo = `-- name: InsertPublicInfo :exec
-INSERT INTO public_information(id, document_name, file_name, public_info_type, description, author, created_at)
+INSERT INTO public_information(id, document_name, file_url, public_info_type, description, author, created_at)
 VALUES (
     $1,
     $2,
@@ -202,7 +202,7 @@ VALUES (
 type InsertPublicInfoParams struct {
 	ID             string             `json:"id"`
 	DocumentName   string             `json:"document_name"`
-	FileName       string             `json:"file_name"`
+	FileUrl        string             `json:"file_url"`
 	PublicInfoType string             `json:"public_info_type"`
 	Description    pgtype.Text        `json:"description"`
 	Author         string             `json:"author"`
@@ -213,7 +213,7 @@ func (q *Queries) InsertPublicInfo(ctx context.Context, arg InsertPublicInfoPara
 	_, err := q.db.Exec(ctx, insertPublicInfo,
 		arg.ID,
 		arg.DocumentName,
-		arg.FileName,
+		arg.FileUrl,
 		arg.PublicInfoType,
 		arg.Description,
 		arg.Author,
@@ -227,7 +227,7 @@ UPDATE
     public_information
 SET
     document_name = $1,
-    file_name = $2,
+    file_url = $2,
     public_info_type = $3,
     description = $4,
     updated_at = $5
@@ -239,7 +239,7 @@ AND
 
 type UpdatePublicInfoParams struct {
 	DocumentName   string             `json:"document_name"`
-	FileName       string             `json:"file_name"`
+	FileUrl        string             `json:"file_url"`
 	PublicInfoType string             `json:"public_info_type"`
 	Description    pgtype.Text        `json:"description"`
 	UpdatedAt      pgtype.Timestamptz `json:"updated_at"`
@@ -249,7 +249,7 @@ type UpdatePublicInfoParams struct {
 func (q *Queries) UpdatePublicInfo(ctx context.Context, arg UpdatePublicInfoParams) (int64, error) {
 	result, err := q.db.Exec(ctx, updatePublicInfo,
 		arg.DocumentName,
-		arg.FileName,
+		arg.FileUrl,
 		arg.PublicInfoType,
 		arg.Description,
 		arg.UpdatedAt,

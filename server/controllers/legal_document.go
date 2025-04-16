@@ -57,7 +57,7 @@ func (h *Controller) GetLegalDocumentsByType(c *gin.Context) {
 func (h *Controller) CreateLegalDocument(c *gin.Context) {
 	var reqBody struct {
 		DocumentName string `json:"document_name" binding:"required"`
-		FileName     string `json:"file_name" binding:"required"`
+		FileUrl      string `json:"file_url" binding:"required"`
 		DocumentType string `json:"document_type" binding:"required"`
 		Description  string `json:"description"`
 		Author       string `json:"author" binding:"required"`
@@ -70,7 +70,7 @@ func (h *Controller) CreateLegalDocument(c *gin.Context) {
 
 	params := postgresql.InsertLegalDocumentParams{
 		DocumentName: reqBody.DocumentName,
-		FileName:     reqBody.FileName,
+		FileUrl:      reqBody.FileUrl,
 		DocumentType: reqBody.DocumentType,
 		Description:  pgx.NewTextFromString(reqBody.Description),
 		Author:       reqBody.Author,
@@ -94,7 +94,7 @@ func (h *Controller) UpdateLegalDocument(c *gin.Context) {
 
 	var reqBody struct {
 		DocumentName string `json:"document_name" binding:"required"`
-		FileName     string `json:"file_name" binding:"required"`
+		FileUrl      string `json:"file_url" binding:"required"`
 		DocumentType string `json:"document_type" binding:"required"`
 		Description  string `json:"description"`
 	}
@@ -107,7 +107,7 @@ func (h *Controller) UpdateLegalDocument(c *gin.Context) {
 	params := postgresql.UpdateLegalDocumentParams{
 		ID:           id,
 		DocumentName: reqBody.DocumentName,
-		FileName:     reqBody.FileName,
+		FileUrl:      reqBody.FileUrl,
 		DocumentType: reqBody.DocumentType,
 		Description:  pgx.NewTextFromString(reqBody.Description),
 	}

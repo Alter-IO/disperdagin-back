@@ -47,7 +47,7 @@ func validateCreatePublicInfo(data postgresql.InsertPublicInfoParams) error {
 		return errors.New("nama dokumen wajib diisi")
 	}
 
-	if data.FileName == "" {
+	if data.FileUrl == "" {
 		return errors.New("nama file wajib diisi")
 	}
 
@@ -73,7 +73,7 @@ func (s *Service) CreatePublicInfo(ctx context.Context, data postgresql.InsertPu
 	params := postgresql.InsertPublicInfoParams{
 		ID:             helpers.GenerateID(),
 		DocumentName:   data.DocumentName,
-		FileName:       data.FileName,
+		FileUrl:        data.FileUrl,
 		PublicInfoType: data.PublicInfoType,
 		Description:    data.Description,
 		Author:         data.Author,
@@ -92,7 +92,7 @@ func validateUpdatePublicInfo(data postgresql.UpdatePublicInfoParams) error {
 		return errors.New("nama dokumen wajib diisi")
 	}
 
-	if data.FileName == "" {
+	if data.FileUrl == "" {
 		return errors.New("nama file wajib diisi")
 	}
 
@@ -114,7 +114,7 @@ func (s *Service) UpdatePublicInfo(ctx context.Context, data postgresql.UpdatePu
 	params := postgresql.UpdatePublicInfoParams{
 		ID:             data.ID,
 		DocumentName:   data.DocumentName,
-		FileName:       data.FileName,
+		FileUrl:        data.FileUrl,
 		PublicInfoType: data.PublicInfoType,
 		Description:    data.Description,
 		UpdatedAt:      pgtype.Timestamptz{Time: time.Now(), Valid: true},
