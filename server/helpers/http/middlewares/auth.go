@@ -66,7 +66,7 @@ func CheckUserRoles(whitelistRole []string) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusForbidden, "Anda tidak punya akses untuk menggunakan fitur ini")
+		c.JSON(http.StatusForbidden, common.NewForbiddenResponse())
 		c.Abort()
 	}
 }

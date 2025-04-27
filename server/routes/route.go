@@ -14,7 +14,7 @@ func NewRegisterRoutes(router *gin.Engine, handler *controllers.Controller) {
 	SARoute.Use(middlewares.Guard(), middlewares.CheckUserRoles([]string{"superadmin"}))
 
 	// Routes only accessible by admin
-	SARoute.PUT("/v1/users/reset-password/:username", handler.ResetPassword)
+	SARoute.PUT("/v1/users/:id/reset-password", handler.ResetPassword)
 
 	PublicRoute := router.Group("")
 	PublicRoute.GET("/v1/health", func(ctx *gin.Context) {
