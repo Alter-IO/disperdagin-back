@@ -97,22 +97,30 @@ func (h *Controller) UpdatePassword(c *gin.Context) {
 }
 
 func (h *Controller) ResetPassword(c *gin.Context) {
-	username := c.Param("username")
-	if username == "" {
+	userId := c.Param("id")
+	if userId == "" {
 		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse("username is required"))
 		return
 	}
 
-	// No request body needed as we'll generate a random password
-	newPassword, err := h.service.ResetPassword(c.Request.Context(), username)
+	type ResetPasswordReq struct {
+		NewPassword string `json:"new_password" binding:"required"`
+	}
+
+	reqBody := new(ResetPasswordReq)
+	if err := c.ShouldBindJSON(&reqBody); err != nil {
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse(err.Error()))
+		return
+	}
+
+	err := h.service.ResetPassword(c.Request.Context(), userId, reqBody.NewPassword)
 	if err != nil {
 		resp := common.MapErrorToResponse(err)
 		c.JSON(resp.Code, resp)
 		return
 	}
 
-	// Return the generated password to the admin
-	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(newPassword, "Kata sandi berhasil direset"))
+	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(nil, "Kata sandi berhasil direset"))
 }
 
 func (h *Controller) DeleteUser(c *gin.Context) {

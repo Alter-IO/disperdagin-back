@@ -4,7 +4,6 @@ import (
 	"alter-io-go/helpers/derrors"
 	"alter-io-go/helpers/hash"
 	helpers "alter-io-go/helpers/ulid"
-	"alter-io-go/helpers/util"
 	"alter-io-go/repositories/postgresql"
 	"context"
 	"errors"
@@ -125,26 +124,20 @@ func (s *Service) UpdatePassword(ctx context.Context, username, oldPassword, new
 	return nil
 }
 
-func (s *Service) ResetPassword(ctx context.Context, username string) (string, error) {
-	// Find user by username first
-	user, err := s.repo.FindUserByUsername(ctx, username)
+func (s *Service) ResetPassword(ctx context.Context, userId, newPassword string) error {
+	// Find user by id first
+	user, err := s.repo.FindUserByID(ctx, userId)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return "", derrors.NewErrorf(derrors.ErrorCodeNotFound, "user tidak ditemukan")
+			return derrors.NewErrorf(derrors.ErrorCodeNotFound, "user tidak ditemukan")
 		}
-		return "", derrors.WrapErrorf(err, derrors.ErrorCodeUnknown, postgreErrMsg)
-	}
-
-	// Generate a random password
-	newPassword, err := util.GenerateRandomPassword()
-	if err != nil {
-		return "", derrors.NewErrorf(derrors.ErrorCodeBadRequest, "gagal membuat password acak")
+		return derrors.WrapErrorf(err, derrors.ErrorCodeUnknown, postgreErrMsg)
 	}
 
 	// Hash the new password
 	hashedPassword, err := hash.HashPassword(newPassword)
 	if err != nil {
-		return "", derrors.NewErrorf(derrors.ErrorCodeBadRequest, "gagal mengenkripsi password")
+		return derrors.NewErrorf(derrors.ErrorCodeBadRequest, "gagal mengenkripsi password")
 	}
 
 	// Update the password without checking old password
@@ -156,15 +149,15 @@ func (s *Service) ResetPassword(ctx context.Context, username string) (string, e
 
 	rowsAffected, err := s.repo.UpdatePassword(ctx, updateParams)
 	if err != nil {
-		return "", derrors.WrapErrorf(err, derrors.ErrorCodeUnknown, postgreErrMsg)
+		return derrors.WrapErrorf(err, derrors.ErrorCodeUnknown, postgreErrMsg)
 	}
 
 	if rowsAffected == 0 {
-		return "", derrors.NewErrorf(derrors.ErrorCodeNotFound, "gagal memperbarui password")
+		return derrors.NewErrorf(derrors.ErrorCodeNotFound, "gagal memperbarui password")
 	}
 
 	// Return the plaintext random password so it can be shared with the user
-	return newPassword, nil
+	return nil
 }
 
 func (s *Service) DeleteUser(ctx context.Context, username string) error {
