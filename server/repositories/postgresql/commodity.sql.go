@@ -155,35 +155,39 @@ func (q *Queries) FindCommoditiesByType(ctx context.Context, commodityTypeID str
 
 const findCommodityByID = `-- name: FindCommodityByID :one
 SELECT
-    id,
-    name,
-    price,
-    unit,
-    publish_date,
-    description,
-    commodity_type_id,
-    author,
-    created_at,
-    updated_at
+    c.id,
+    c.commodity_type_id,
+    ct.description as commodity_type_name,
+    c.name,
+    c.price,
+    c.unit,
+    c.publish_date,
+    c.description,
+    c.author,
+    c.created_at,
+    c.updated_at
 FROM
-    commodities
+    commodities c
+LEFT JOIN
+    commodity_types ct ON c.commodity_type_id = ct.id AND ct.deleted_at IS NULL
 WHERE
-    id = $1
+    c.id = $1
 AND
-    deleted_at IS NULL
+    c.deleted_at IS NULL
 `
 
 type FindCommodityByIDRow struct {
-	ID              string             `json:"id"`
-	Name            string             `json:"name"`
-	Price           pgtype.Numeric     `json:"price"`
-	Unit            string             `json:"unit"`
-	PublishDate     pgtype.Date        `json:"publish_date"`
-	Description     pgtype.Text        `json:"description"`
-	CommodityTypeID string             `json:"commodity_type_id"`
-	Author          string             `json:"author"`
-	CreatedAt       pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt       pgtype.Timestamptz `json:"updated_at"`
+	ID                string             `json:"id"`
+	CommodityTypeID   string             `json:"commodity_type_id"`
+	CommodityTypeName pgtype.Text        `json:"commodity_type_name"`
+	Name              string             `json:"name"`
+	Price             pgtype.Numeric     `json:"price"`
+	Unit              string             `json:"unit"`
+	PublishDate       pgtype.Date        `json:"publish_date"`
+	Description       pgtype.Text        `json:"description"`
+	Author            string             `json:"author"`
+	CreatedAt         pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt         pgtype.Timestamptz `json:"updated_at"`
 }
 
 func (q *Queries) FindCommodityByID(ctx context.Context, id string) (FindCommodityByIDRow, error) {
@@ -191,12 +195,13 @@ func (q *Queries) FindCommodityByID(ctx context.Context, id string) (FindCommodi
 	var i FindCommodityByIDRow
 	err := row.Scan(
 		&i.ID,
+		&i.CommodityTypeID,
+		&i.CommodityTypeName,
 		&i.Name,
 		&i.Price,
 		&i.Unit,
 		&i.PublishDate,
 		&i.Description,
-		&i.CommodityTypeID,
 		&i.Author,
 		&i.CreatedAt,
 		&i.UpdatedAt,

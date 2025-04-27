@@ -1,21 +1,24 @@
 -- name: FindCommodityByID :one
 SELECT
-    id,
-    name,
-    price,
-    unit,
-    publish_date,
-    description,
-    commodity_type_id,
-    author,
-    created_at,
-    updated_at
+    c.id,
+    c.commodity_type_id,
+    ct.description as commodity_type_name,
+    c.name,
+    c.price,
+    c.unit,
+    c.publish_date,
+    c.description,
+    c.author,
+    c.created_at,
+    c.updated_at
 FROM
-    commodities
+    commodities c
+LEFT JOIN
+    commodity_types ct ON c.commodity_type_id = ct.id AND ct.deleted_at IS NULL
 WHERE
-    id = sqlc.arg(id)
+    c.id = sqlc.arg(id)
 AND
-    deleted_at IS NULL;
+    c.deleted_at IS NULL;
 
 -- name: FindAllCommodities :many
 SELECT
