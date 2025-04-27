@@ -20,8 +20,9 @@ func NewCreatedResponseWithData(data interface{}) DefaultResponse {
 
 func NewSuccessDefaultResponse(data interface{}, message string) DefaultResponse {
 	return DefaultResponse{
-		Code:   http.StatusOK,
-		Status: message,
-		Data:   data,
+		Code:    http.StatusOK,
+		Status:  "SUCCESS",
+		Message: message,
+		Data:    data,
 	}
 }

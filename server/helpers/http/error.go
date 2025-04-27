@@ -60,7 +60,7 @@ func NewForbiddenResponse() DefaultResponse {
 	return DefaultResponse{
 		Code:    http.StatusForbidden,
 		Status:  ErrForbidden,
-		Message: "Forbidden",
+		Message: "Anda tidak punya akses untuk menggunakan fitur ini",
 	}
 }
 
