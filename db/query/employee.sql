@@ -70,6 +70,13 @@ AND
 ORDER BY
     name ASC;
 
+-- name: FindEmployeePositions :many
+SELECT DISTINCT ON (LOWER(position))
+    position
+FROM employees
+ORDER BY LOWER(position), position;
+
+
 -- name: InsertEmployee :exec
 INSERT INTO employees(id, name, position, address, employee_id, birthplace, birthdate, photo, status, author, created_at)
 VALUES (
@@ -98,6 +105,7 @@ SET
     birthdate = sqlc.arg(birthdate),
     photo = sqlc.arg(photo),
     status = sqlc.arg(status),
+    author = sqlc.arg(author),
     updated_at = sqlc.arg(updated_at)
 WHERE
     id = sqlc.arg(id)

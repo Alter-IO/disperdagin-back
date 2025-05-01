@@ -1,14 +1,14 @@
 up-compose:
-	docker compose -f docker/docker-compose.yaml up -d
+	docker compose -p disperdagin -f docker/docker-compose.yaml up -d
 
 down-compose:
-	docker compose -f docker/docker-compose.yaml down
+	docker compose -p disperdagin -f docker/docker-compose.yaml down
 
 start-service:
-	docker compose -f docker/docker-compose.yaml start
+	docker compose -p disperdagin -f docker/docker-compose.yaml start
 
 stop-service:
-	docker compose -f docker/docker-compose.yaml stop
+	docker compose -p disperdagin -f docker/docker-compose.yaml stop
 
 migrate-up:
 	migrate -path db/migrations -database "postgres://devs:password@localhost:5432/db_disperdagin?sslmode=disable" up

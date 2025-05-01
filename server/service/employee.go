@@ -1,6 +1,7 @@
 package service
 
 import (
+	"alter-io-go/domain"
 	"alter-io-go/helpers/derrors"
 	helpers "alter-io-go/helpers/ulid"
 	"alter-io-go/repositories/postgresql"
@@ -117,6 +118,7 @@ func (s *Service) UpdateEmployee(ctx context.Context, data postgresql.UpdateEmpl
 		Birthdate:  data.Birthdate,
 		Photo:      data.Photo,
 		Status:     data.Status,
+		Author:     data.Author,
 		UpdatedAt:  pgtype.Timestamptz{Time: time.Now(), Valid: true},
 	}
 
@@ -141,4 +143,18 @@ func (s *Service) DeleteEmployee(ctx context.Context, id string) (int64, error) 
 	}
 
 	return rowsAffected, nil
+}
+
+func (s *Service) GetEmployeePositions(ctx context.Context) ([]domain.EmployeePosition, error) {
+	rawPositions, err := s.repo.FindEmployeePositions(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	positions := make([]domain.EmployeePosition, len(rawPositions))
+	for i, p := range rawPositions {
+		positions[i] = domain.EmployeePosition{Position: p}
+	}
+
+	return positions, nil
 }

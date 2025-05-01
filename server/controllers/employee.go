@@ -146,3 +146,14 @@ func (h *Controller) DeleteEmployee(c *gin.Context) {
 
 	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(nil, "Karyawan berhasil dihapus"))
 }
+
+func (h *Controller) GetEmployeePositions(c *gin.Context) {
+	positions, err := h.service.GetEmployeePositions(c)
+	if err != nil {
+		resp := common.MapErrorToResponse(err)
+		c.JSON(resp.Code, resp)
+		return
+	}
+
+	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(positions, "Jabatan berhasil ditemukan"))
+}

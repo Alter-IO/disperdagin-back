@@ -55,6 +55,7 @@ func NewRegisterRoutes(router *gin.Engine, handler *controllers.Controller) {
 	// Employee Routes
 	PublicRoute.GET("/v1/employees", handler.GetAllEmployees)
 	PublicRoute.GET("/v1/employees/active", handler.GetActiveEmployees)
+	PublicRoute.GET("/v1/employees/positions", handler.GetEmployeePositions)
 	PublicRoute.GET("/v1/employees/position/:position", handler.GetEmployeesByPosition)
 	PublicRoute.GET("/v1/employees/:id", handler.GetEmployeeByID)
 	AdminRoute.POST("/v1/employees", handler.CreateEmployee)
