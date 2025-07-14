@@ -71,9 +71,7 @@ CREATE TABLE "villages" (
 CREATE TABLE "commodities" (
   "id" VARCHAR PRIMARY KEY,
   "name" VARCHAR NOT NULL,
-  "price" DECIMAL(15,2) NOT NULL,
   "unit" VARCHAR NOT NULL,
-  "publish_date" DATE NOT NULL,
   "description" TEXT,
   "commodity_type_id" VARCHAR NOT NULL,
   "created_at" TIMESTAMPTZ NOT NULL,
@@ -81,6 +79,12 @@ CREATE TABLE "commodities" (
   "author" VARCHAR NOT NULL,
   "deleted_at" TIMESTAMPTZ,
   CONSTRAINT fk_commodity_type FOREIGN KEY ("commodity_type_id") REFERENCES "commodity_types" ("id")
+);
+
+CREATE TABLE "daily_commodities" (
+  "id" VARCHAR PRIMARY KEY,
+  "commodities" JSONB, -- [{"id": "1", "price": 1000}]
+  "publish_date" DATE NOT NULL
 );
 
 CREATE TABLE "market_fees" (

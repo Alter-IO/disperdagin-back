@@ -23,13 +23,13 @@ func (s *Service) GetAllCommodities(ctx context.Context) ([]postgresql.FindAllCo
 }
 
 // GetLatestCommodities retrieves commodities ordered by publish date
-func (s *Service) GetLatestCommodities(ctx context.Context) ([]postgresql.FindLatestCommoditiesRow, error) {
-	commodities, err := s.repo.FindLatestCommodities(ctx)
+func (s *Service) GetDailyCommodities(ctx context.Context) (postgresql.DailyCommodity, error) {
+	commodity, err := s.repo.FindLatestCommodities(ctx)
 	if err != nil {
-		return nil, derrors.WrapErrorf(err, derrors.ErrorCodeUnknown, postgreErrMsg)
+		return postgresql.DailyCommodity{}, derrors.WrapErrorf(err, derrors.ErrorCodeUnknown, postgreErrMsg)
 	}
 
-	return commodities, nil
+	return commodity, nil
 }
 
 // GetCommoditiesByType retrieves commodities filtered by type
@@ -81,9 +81,7 @@ func (s *Service) CreateCommodity(ctx context.Context, data postgresql.InsertCom
 	params := postgresql.InsertCommodityParams{
 		ID:              helpers.GenerateID(),
 		Name:            data.Name,
-		Price:           data.Price,
 		Unit:            data.Unit,
-		PublishDate:     data.PublishDate,
 		Description:     data.Description,
 		CommodityTypeID: data.CommodityTypeID,
 		Author:          data.Author,
@@ -116,9 +114,7 @@ func (s *Service) UpdateCommodity(ctx context.Context, data postgresql.UpdateCom
 	params := postgresql.UpdateCommodityParams{
 		ID:              data.ID,
 		Name:            data.Name,
-		Price:           data.Price,
 		Unit:            data.Unit,
-		PublishDate:     data.PublishDate,
 		Description:     data.Description,
 		CommodityTypeID: data.CommodityTypeID,
 		UpdatedAt:       pgtype.Timestamptz{Time: time.Now(), Valid: true},

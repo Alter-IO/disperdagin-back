@@ -4,9 +4,7 @@ SELECT
     c.commodity_type_id,
     ct.description as commodity_type_name,
     c.name,
-    c.price,
     c.unit,
-    c.publish_date,
     c.description,
     c.author,
     c.created_at,
@@ -24,9 +22,7 @@ AND
 SELECT
     id,
     name,
-    price,
     unit,
-    publish_date,
     commodity_type_id,
     author,
     created_at
@@ -41,9 +37,7 @@ ORDER BY
 SELECT
     id,
     name,
-    price,
     unit,
-    publish_date,
     commodity_type_id,
     author,
     created_at
@@ -56,31 +50,12 @@ AND
 ORDER BY
     name ASC;
 
--- name: FindLatestCommodities :many
-SELECT
-    id,
-    name,
-    price,
-    unit,
-    publish_date,
-    commodity_type_id,
-    author,
-    created_at
-FROM
-    commodities
-WHERE
-    deleted_at IS NULL
-ORDER BY
-    publish_date DESC;
-
 -- name: InsertCommodity :exec
-INSERT INTO commodities(id, name, price, unit, publish_date, description, commodity_type_id, author, created_at)
+INSERT INTO commodities(id, name, unit, description, commodity_type_id, author, created_at)
 VALUES (
     sqlc.arg(id),
     sqlc.arg(name),
-    sqlc.arg(price),
     sqlc.arg(unit),
-    sqlc.arg(publish_date),
     sqlc.arg(description),
     sqlc.arg(commodity_type_id),
     sqlc.arg(author),
@@ -92,9 +67,7 @@ UPDATE
     commodities
 SET
     name = sqlc.arg(name),
-    price = sqlc.arg(price),
     unit = sqlc.arg(unit),
-    publish_date = sqlc.arg(publish_date),
     description = sqlc.arg(description),
     commodity_type_id = sqlc.arg(commodity_type_id),
     updated_at = sqlc.arg(updated_at)
@@ -112,3 +85,14 @@ WHERE
     id = sqlc.arg(id)
 AND
     deleted_at IS NULL;
+
+-- name: FindLatestCommodities :one
+SELECT
+    id,
+    commodities,
+    publish_date
+FROM
+    daily_commodities
+ORDER BY 
+    publish_date DESC
+LIMIT 1;

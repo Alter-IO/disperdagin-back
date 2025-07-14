@@ -19,8 +19,8 @@ func (h *Controller) GetAllCommodities(c *gin.Context) {
 	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(commodities, "Komoditas berhasil ditemukan"))
 }
 
-func (h *Controller) GetLatestCommodities(c *gin.Context) {
-	commodities, err := h.service.GetLatestCommodities(c)
+func (h *Controller) GetDailyCommodities(c *gin.Context) {
+	commodities, err := h.service.GetDailyCommodities(c)
 	if err != nil {
 		resp := common.MapErrorToResponse(err)
 		c.JSON(resp.Code, resp)

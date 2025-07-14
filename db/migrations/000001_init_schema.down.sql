@@ -21,3 +21,4 @@ DROP TABLE IF EXISTS "greetings";
 DROP TABLE IF EXISTS "vision_mission";
 DROP TABLE IF EXISTS "videos";
 DROP TABLE IF EXISTS "photo_categories";
+DROP TABLE IF EXISTS "daily_commodities";
