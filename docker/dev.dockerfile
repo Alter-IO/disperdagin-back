@@ -1,5 +1,5 @@
 # Use Go official image
-FROM golang:1.23.3-alpine
+FROM golang:1.24-alpine
 
 # Install timezone data
 RUN apk add --no-cache tzdata
