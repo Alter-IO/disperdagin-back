@@ -1,15 +1,18 @@
 package service
 
 import (
+	"alter-io-go/domain"
 	"alter-io-go/helpers/derrors"
 	helpers "alter-io-go/helpers/ulid"
 	"alter-io-go/repositories/postgresql"
 	"context"
+	"encoding/json"
 	"errors"
 	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/shopspring/decimal"
 )
 
 // GetAllCommodities retrieves all commodities
@@ -30,6 +33,37 @@ func (s *Service) GetDailyCommodities(ctx context.Context) (postgresql.DailyComm
 	}
 
 	return commodity, nil
+}
+
+func (s *Service) CreateDailyCommodity(ctx context.Context, data domain.CommodityDaily) error {
+	if len(data.Commodities) == 0 {
+		return derrors.NewErrorf(derrors.ErrorCodeBadRequest, "data komoditas tidak boleh kosong")
+	}
+	for _, commodity := range data.Commodities {
+		if commodity.ID == "" {
+			return derrors.NewErrorf(derrors.ErrorCodeBadRequest, "ID komoditas wajib diisi")
+		}
+		if commodity.Price.LessThanOrEqual(decimal.Zero) {
+			return derrors.NewErrorf(derrors.ErrorCodeBadRequest, "Harga tidak boleh atau sama dengan Rp. 0")
+		}
+	}
+
+	// masrhsalize Commodities to JSON
+	commoditiesJSON, err := json.Marshal(data.Commodities)
+	if err != nil {
+		return derrors.WrapErrorf(err, derrors.ErrorCodeUnknown, "gagal mengonversi data komoditas ke JSON")
+	}
+
+	params := postgresql.InsertDailyCommodityParams{
+		ID:          helpers.GenerateID(),
+		Commodities: commoditiesJSON,
+		PublishDate: pgtype.Date{Time: data.PublishDate, Valid: true},
+	}
+	if err := s.repo.InsertDailyCommodity(ctx, params); err != nil {
+		return derrors.WrapErrorf(err, derrors.ErrorCodeUnknown, postgreErrMsg)
+	}
+
+	return nil
 }
 
 // GetCommoditiesByType retrieves commodities filtered by type

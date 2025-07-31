@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"alter-io-go/domain"
 	common "alter-io-go/helpers/http"
 	"alter-io-go/repositories/postgresql"
 	"net/http"
@@ -62,6 +63,22 @@ func (h *Controller) GetCommodityByID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, common.NewSuccessDefaultResponse(commodity, "Komoditas berhasil ditemukan"))
+}
+
+func (h *Controller) CreateDailyCommodity(c *gin.Context) {
+	reqBody := new(domain.CommodityDaily)
+	if err := c.ShouldBindJSON(&reqBody); err != nil {
+		c.JSON(http.StatusBadRequest, common.NewBadRequestResponse(err.Error()))
+		return
+	}
+
+	if err := h.service.CreateDailyCommodity(c, *reqBody); err != nil {
+		resp := common.MapErrorToResponse(err)
+		c.JSON(resp.Code, resp)
+		return
+	}
+
+	c.JSON(http.StatusCreated, common.NewSuccessCreatedResponse("Komoditas harian berhasil dibuat"))
 }
 
 func (h *Controller) CreateCommodity(c *gin.Context) {
