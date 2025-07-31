@@ -29,6 +29,9 @@ func (s *Service) GetAllCommodities(ctx context.Context) ([]postgresql.FindAllCo
 func (s *Service) GetDailyCommodities(ctx context.Context) (postgresql.DailyCommodity, error) {
 	commodity, err := s.repo.FindLatestCommodities(ctx)
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return postgresql.DailyCommodity{}, nil
+		}
 		return postgresql.DailyCommodity{}, derrors.WrapErrorf(err, derrors.ErrorCodeUnknown, postgreErrMsg)
 	}
 
