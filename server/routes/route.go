@@ -48,10 +48,13 @@ func NewRegisterRoutes(router *gin.Engine, handler *controllers.Controller) {
 	// Commodity Routes
 	PublicRoute.GET("/v1/commodities", handler.GetAllCommodities)
 	PublicRoute.GET("/v1/commodities/:id", handler.GetCommodityByID)
-	PublicRoute.GET("/v1/commodities/daily", handler.GetDailyCommodities)
 	AdminRoute.POST("/v1/commodities", handler.CreateCommodity)
 	AdminRoute.PUT("/v1/commodities/:id", handler.UpdateCommodity)
 	AdminRoute.DELETE("/v1/commodities/:id", handler.DeleteCommodity)
+
+	// Daily Commodity Routes
+	PublicRoute.GET("/v1/commodities/daily", handler.GetDailyCommodities)
+	PublicRoute.POST("/v1/commodities/daily", handler.GetDailyCommodities)
 
 	// Employee Routes
 	PublicRoute.GET("/v1/employees", handler.GetAllEmployees)

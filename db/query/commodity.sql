@@ -93,6 +93,10 @@ SELECT
     publish_date
 FROM
     daily_commodities
-ORDER BY 
+ORDER BY
     publish_date DESC
 LIMIT 1;
+
+-- name: InsertDailyCommodity :exec
+INSERT INTO daily_commodities (id, commodities, publish_date)
+VALUES (sqlc.arg(id), sqlc.arg(commodities), sqlc.arg(publish_date));
